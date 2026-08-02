@@ -1,4 +1,6 @@
 services:
+
+  # ── API Gateway (dev overrides) ───────────────────────────────────────────
   apigateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -12,3 +14,24 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  # ── Auth Service (dev overrides) ─────────────────────────────────────────
+  authservice:
+    environment:
+      # Tell ASP.NET Core which environment config to load (appsettings.Docker.json)
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_HTTP_PORTS=8080
+      # Override the connection string at runtime using the SA_PASSWORD from .env
+      - ConnectionStrings__AuthDb=Server=sqlserver,1433;Database=AuthServiceDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - IdGen__MachineId=${IDGEN_MACHINE_ID:-0}
+    ports:
+      - "5000:8080"    # HTTP  → localhost:5000
+      - "5001:8081"    # HTTPS → localhost:5001
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  # ── SQL Server (dev overrides) ────────────────────────────────────────────
+  sqlserver:
+    ports:
+      - "1433:1433"    # Expose for SSMS / Azure Data Studio on host machine
