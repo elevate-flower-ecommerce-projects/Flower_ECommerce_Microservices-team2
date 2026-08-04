@@ -1,65 +1,34 @@
-using AuthService.Data;
-using IdGen;
-using IdGen.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
+using AuthService.Common.Middelwares;
+using AuthService.Configurations.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ── Database ─────────────────────────────────────────────────────────────────
-builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AuthDb")));
-
-// ── Snowflake ID Generator (IdGen) ────────────────────────────────────────────
-// MachineId uniquely identifies this service instance in a distributed setup.
-// Change MachineId (0-1023) per node/container to avoid ID collisions.
-var machineId = builder.Configuration.GetValue<int>("IdGen:MachineId");
-builder.Services.AddIdGen(machineId, () => new IdGeneratorOptions());
+// ── Services ──────────────────────────────────────────────────────────────────
+builder.Services.AddDBContext(builder.Configuration);                    // EF Core (AuthDbContext)
+builder.Services.AddApplicationServices();                               // CurrentUserService, Middlewares, IdGen, Cache
+builder.Services.AddMediatRConfiguration();                              // MediatR + Validation + Transaction behaviors
+builder.Services.AddFluentValidationConfiguration();                     // FluentValidation validators
+builder.Services.AddMapsterConfiguration();                              // Mapster object mapping
+builder.Services.AddAuthenticationConfiguration(builder.Configuration); // JWT Bearer auth
+builder.Services.AddCapConfiguration(builder.Configuration);            // CAP (outbox) + RabbitMQ
+builder.Services.AddSwaggerConfiguration();                              // OpenAPI spec + Swagger UI registration
 
 // ── MVC ───────────────────────────────────────────────────────────────────────
 builder.Services.AddControllers();
 
-// ── OpenAPI spec (.NET 10 native) ─────────────────────────────────────────────
-// Generates the raw JSON spec at /openapi/v1.json
-builder.Services.AddOpenApi("v1", options =>
-{
-    options.AddDocumentTransformer((document, context, _) =>
-    {
-        document.Info = new()
-        {
-            Title       = "Auth Service API",
-            Version     = "v1",
-            Description = "Handles authentication, authorization, user management, and token operations for the Flower E-Commerce platform."
-        };
-        return Task.CompletedTask;
-    });
-});
-
-// ── Swagger UI (Swashbuckle) ──────────────────────────────────────────────────
-// Swashbuckle is used ONLY for the interactive HTML UI.
-// It reads the spec from /openapi/v1.json generated above.
-builder.Services.AddEndpointsApiExplorer();
-
 var app = builder.Build();
 
-// ── Swagger UI middleware ──────────────────────────────────────────────────────
-// Enabled in Development and Docker so the UI is reachable from containers
-if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
-{
-    app.MapOpenApi();           // → /openapi/v1.json
-
-    app.UseSwaggerUI(ui =>
-    {
-        ui.SwaggerEndpoint("/openapi/v1.json", "Auth Service v1");
-        ui.RoutePrefix           = "swagger";       // → http://localhost:5000/swagger
-        ui.DocumentTitle         = "Auth Service API";
-        ui.DisplayRequestDuration();                // shows each request's time in ms
-        ui.EnableTryItOutByDefault();               // "Try it out" open by default
-    });
-}
+// ── Swagger / OpenAPI Middleware ───────────────────────────────────────────────
+app.UseSwaggerConfiguration();
 
 // ── HTTP Pipeline ─────────────────────────────────────────────────────────────
 app.UseHttpsRedirection();
 
+// Global error handling middleware (outermost — catches all unhandled exceptions)
+app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
+app.UseMiddleware<GlobalErrorHandlerMiddleware>();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

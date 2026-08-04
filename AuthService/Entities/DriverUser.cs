@@ -1,4 +1,4 @@
-using AuthService.Entities.Enums;
+using AuthService.Common.Enums;
 
 namespace AuthService.Entities;
 
@@ -19,5 +19,6 @@ public class DriverUser : BaseEntity
 
     public string? RejectionReason { get; set; }
 
-    public DriverStatus Status { get; set; } = DriverStatus.Pending;
+    public long StatusId { get; set; }
+    public Status Status { get; set; }
 }

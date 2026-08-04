@@ -24,6 +24,10 @@ services:
       # Override the connection string at runtime using the SA_PASSWORD from .env
       - ConnectionStrings__AuthDb=Server=sqlserver,1433;Database=AuthServiceDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
       - IdGen__MachineId=${IDGEN_MACHINE_ID:-0}
+      # ── JWT secrets injected from .env — never hardcode in appsettings ────────
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
     ports:
       - "5000:8080"    # HTTP  → localhost:5000
       - "5001:8081"    # HTTPS → localhost:5001

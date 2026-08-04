@@ -1,4 +1,4 @@
-using AuthService.Entities.Enums;
+using AuthService.Common.Enums;
 
 namespace AuthService.Entities;
 
@@ -22,6 +22,10 @@ public class User : BaseEntity
     public bool IsBlocked { get; set; } = false;
 
     public DateTime? BlockedAt { get; set; }
+
+    // Foreign Key to PersonType
+    public long? PersonTypeId { get; set; }
+    public PersonType? PersonType { get; set; }
 
     // Navigation properties
     public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();

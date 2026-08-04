@@ -1,4 +1,4 @@
-using AuthService.Entities.Enums;
+using AuthService.Common.Enums;
 
 namespace AuthService.Entities;
 
@@ -13,7 +13,7 @@ public class UserDocument : BaseEntity
     /// <summary>File size in bytes.</summary>
     public long DocumentSize { get; set; }
 
-    public DocumentType DocumentType { get; set; }
+    public string DocumentType { get; set; } = string.Empty;
 
     /// <summary>URL or path to the stored document file.</summary>
     public string DocumentUrl { get; set; } = string.Empty;

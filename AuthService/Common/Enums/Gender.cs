@@ -1,4 +1,4 @@
-namespace AuthService.Entities.Enums;
+namespace AuthService.Common.Enums;
 
 public enum Gender
 {
