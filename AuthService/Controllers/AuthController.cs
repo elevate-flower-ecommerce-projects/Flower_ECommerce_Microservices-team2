@@ -1,6 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
-using MediatR;
+using AuthService.Common.ResultPattern;
 using AuthService.Features.Lookup.Queries;
+using AuthService.Features.Password.Commands.ChangePassword;
+using AuthService.Features.Password.Commands.ForgotPassword;
+using AuthService.Features.Password.Commands.ResetPassword;
+using Mapster;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.Controllers;
 
@@ -56,4 +63,62 @@ public class AuthController : ControllerBase
             });
         }
     }
+
+    /// <summary>
+    /// Initiates the forgot password flow by generating and sending an OTP verification code.
+    /// </summary>
+    /// <param name="request">Forgot Password request containing user email.</param>
+    /// <returns>Endpoint response.</returns>
+    [HttpPost("forgot-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        var command = request.Adapt<ForgotPasswordCommand>();
+        var result = await _mediator.Send(command);
+
+        return result.IsSuccess
+            ? Ok(EndpointResponse<bool>.Success(result.Data, result.Message))
+            : BadRequest(EndpointResponse<bool>.Failure(result.ErrorCode, result.Message));
+    }
+
+    /// <summary>
+    /// Resets the user's password using an OTP verification code.
+    /// </summary>
+    /// <param name="request">Reset Password parameters.</param>
+    /// <returns>Endpoint response.</returns>
+    [HttpPost("reset-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        var command = request.Adapt<ResetPasswordCommand>();
+        var result = await _mediator.Send(command);
+
+        return result.IsSuccess
+            ? Ok(EndpointResponse<bool>.Success(result.Data, result.Message))
+            : BadRequest(EndpointResponse<bool>.Failure(result.ErrorCode, result.Message));
+    }
+
+    /// <summary>
+    /// Changes the password for the currently logged-in user.
+    /// </summary>
+    /// <param name="request">Change Password parameters.</param>
+    /// <returns>Endpoint response.</returns>
+    [Authorize]
+    [HttpPost("change-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        var command = request.Adapt<ChangePasswordCommand>();
+        var result = await _mediator.Send(command);
+
+        return result.IsSuccess
+            ? Ok(EndpointResponse<bool>.Success(result.Data, result.Message))
+            : BadRequest(EndpointResponse<bool>.Failure(result.ErrorCode, result.Message));
+    }
+
+
 }
