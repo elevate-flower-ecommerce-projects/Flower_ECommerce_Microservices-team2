@@ -14,30 +14,12 @@ namespace AuthService.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "PersonTypes",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PersonTypeValue = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PersonTypes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PersonType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -81,7 +63,6 @@ namespace AuthService.Migrations
                     IsEmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     IsBlocked = table.Column<bool>(type: "bit", nullable: false),
                     BlockedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    PersonTypeId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -91,12 +72,6 @@ namespace AuthService.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_PersonTypes_PersonTypeId",
-                        column: x => x.PersonTypeId,
-                        principalTable: "PersonTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -260,13 +235,13 @@ namespace AuthService.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "PersonTypes",
-                columns: new[] { "Id", "CreatedAt", "CreatedBy", "Description", "IsDeleted", "Name", "PersonTypeValue", "UpdatedAt", "UpdatedBy" },
+                table: "Roles",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "IsDeleted", "Name", "PersonType", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2026, 8, 4, 21, 48, 28, 435, DateTimeKind.Utc).AddTicks(5551), null, "Standard e-commerce customer user.", false, "Customer", 0, null, null },
-                    { 2L, new DateTime(2026, 8, 4, 21, 48, 28, 435, DateTimeKind.Utc).AddTicks(6320), null, "Delivery driver user profile.", false, "Driver", 0, null, null },
-                    { 3L, new DateTime(2026, 8, 4, 21, 48, 28, 435, DateTimeKind.Utc).AddTicks(6321), null, "System administrator user.", false, "Admin", 0, null, null }
+                    { 1L, new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(3754), null, false, "Customer", "Customer", null, null },
+                    { 2L, new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(4581), null, false, "Driver", "Driver", null, null },
+                    { 3L, new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(4583), null, false, "Admin", "Admin", null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -274,10 +249,10 @@ namespace AuthService.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Description", "IsDeleted", "Name", "StatusType", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2026, 8, 4, 21, 48, 28, 439, DateTimeKind.Utc).AddTicks(2733), null, "Application submitted and awaiting review.", false, "Pending", 0, null, null },
-                    { 2L, new DateTime(2026, 8, 4, 21, 48, 28, 439, DateTimeKind.Utc).AddTicks(3490), null, "Driver application approved and active.", false, "Approved", 0, null, null },
-                    { 3L, new DateTime(2026, 8, 4, 21, 48, 28, 439, DateTimeKind.Utc).AddTicks(3492), null, "Driver application was rejected.", false, "Rejected", 0, null, null },
-                    { 4L, new DateTime(2026, 8, 4, 21, 48, 28, 439, DateTimeKind.Utc).AddTicks(3492), null, "Driver account has been suspended.", false, "Suspended", 0, null, null }
+                    { 1L, new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(7448), null, "Application submitted and awaiting review.", false, "Pending", 0, null, null },
+                    { 2L, new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8072), null, "Driver application approved and active.", false, "Approved", 0, null, null },
+                    { 3L, new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8074), null, "Driver application was rejected.", false, "Rejected", 0, null, null },
+                    { 4L, new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8075), null, "Driver account has been suspended.", false, "Suspended", 0, null, null }
                 });
 
             migrationBuilder.CreateIndex(
@@ -306,12 +281,6 @@ namespace AuthService.Migrations
                 name: "IX_OtpVerificationCodes_UserId",
                 table: "OtpVerificationCodes",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PersonTypes_Name",
-                table: "PersonTypes",
-                column: "Name",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_Token",
@@ -353,11 +322,6 @@ namespace AuthService.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_PersonTypeId",
-                table: "Users",
-                column: "PersonTypeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Users_PhoneNumber",
                 table: "Users",
                 column: "PhoneNumber",
@@ -393,9 +357,6 @@ namespace AuthService.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "PersonTypes");
         }
     }
 }

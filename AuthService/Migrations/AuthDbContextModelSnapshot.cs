@@ -155,74 +155,6 @@ namespace AuthService.Migrations
                     b.ToTable("OtpVerificationCodes");
                 });
 
-            modelBuilder.Entity("AuthService.Entities.PersonType", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("PersonTypeValue")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("PersonTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedAt = new DateTime(2026, 8, 4, 21, 48, 28, 435, DateTimeKind.Utc).AddTicks(5551),
-                            Description = "Standard e-commerce customer user.",
-                            IsDeleted = false,
-                            Name = "Customer",
-                            PersonTypeValue = 0
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedAt = new DateTime(2026, 8, 4, 21, 48, 28, 435, DateTimeKind.Utc).AddTicks(6320),
-                            Description = "Delivery driver user profile.",
-                            IsDeleted = false,
-                            Name = "Driver",
-                            PersonTypeValue = 0
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            CreatedAt = new DateTime(2026, 8, 4, 21, 48, 28, 435, DateTimeKind.Utc).AddTicks(6321),
-                            Description = "System administrator user.",
-                            IsDeleted = false,
-                            Name = "Admin",
-                            PersonTypeValue = 0
-                        });
-                });
-
             modelBuilder.Entity("AuthService.Entities.RefreshToken", b =>
                 {
                     b.Property<long>("Id")
@@ -286,6 +218,10 @@ namespace AuthService.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("PersonType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -298,6 +234,32 @@ namespace AuthService.Migrations
                         .IsUnique();
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(3754),
+                            IsDeleted = false,
+                            Name = "Customer",
+                            PersonType = "Customer"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(4581),
+                            IsDeleted = false,
+                            Name = "Driver",
+                            PersonType = "Driver"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(4583),
+                            IsDeleted = false,
+                            Name = "Admin",
+                            PersonType = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("AuthService.Entities.Status", b =>
@@ -342,7 +304,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2026, 8, 4, 21, 48, 28, 439, DateTimeKind.Utc).AddTicks(2733),
+                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(7448),
                             Description = "Application submitted and awaiting review.",
                             IsDeleted = false,
                             Name = "Pending",
@@ -351,7 +313,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedAt = new DateTime(2026, 8, 4, 21, 48, 28, 439, DateTimeKind.Utc).AddTicks(3490),
+                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8072),
                             Description = "Driver application approved and active.",
                             IsDeleted = false,
                             Name = "Approved",
@@ -360,7 +322,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedAt = new DateTime(2026, 8, 4, 21, 48, 28, 439, DateTimeKind.Utc).AddTicks(3492),
+                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8074),
                             Description = "Driver application was rejected.",
                             IsDeleted = false,
                             Name = "Rejected",
@@ -369,7 +331,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 4L,
-                            CreatedAt = new DateTime(2026, 8, 4, 21, 48, 28, 439, DateTimeKind.Utc).AddTicks(3492),
+                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8075),
                             Description = "Driver account has been suspended.",
                             IsDeleted = false,
                             Name = "Suspended",
@@ -419,9 +381,6 @@ namespace AuthService.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.Property<long?>("PersonTypeId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -437,8 +396,6 @@ namespace AuthService.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
-
-                    b.HasIndex("PersonTypeId");
 
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
@@ -556,16 +513,6 @@ namespace AuthService.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AuthService.Entities.User", b =>
-                {
-                    b.HasOne("AuthService.Entities.PersonType", "PersonType")
-                        .WithMany("Users")
-                        .HasForeignKey("PersonTypeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("PersonType");
-                });
-
             modelBuilder.Entity("AuthService.Entities.UserDocument", b =>
                 {
                     b.HasOne("AuthService.Entities.User", "User")
@@ -594,11 +541,6 @@ namespace AuthService.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AuthService.Entities.PersonType", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("AuthService.Entities.Role", b =>

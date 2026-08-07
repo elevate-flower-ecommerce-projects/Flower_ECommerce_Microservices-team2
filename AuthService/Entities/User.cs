@@ -23,10 +23,6 @@ public class User : BaseEntity
 
     public DateTime? BlockedAt { get; set; }
 
-    // Foreign Key to PersonType
-    public long? PersonTypeId { get; set; }
-    public PersonType? PersonType { get; set; }
-
     // Navigation properties
     public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();

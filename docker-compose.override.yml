@@ -22,7 +22,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_HTTP_PORTS=8080
       # Override the connection string at runtime using the SA_PASSWORD from .env
-      - ConnectionStrings__AuthDb=Server=sqlserver,1433;Database=AuthServiceDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - ConnectionStrings__AuthDb=Server=sqlserver,1433;Database=AuthDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
       - IdGen__MachineId=${IDGEN_MACHINE_ID:-0}
       # ── JWT secrets injected from .env — never hardcode in appsettings ────────
       - Jwt__Key=${JWT_KEY}

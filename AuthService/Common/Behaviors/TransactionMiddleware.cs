@@ -17,6 +17,7 @@ namespace AuthService.Common.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
+            // If we're already inside a transaction (nested call), just continue
             if (_context.Database.CurrentTransaction != null)
                 return await next();
 
