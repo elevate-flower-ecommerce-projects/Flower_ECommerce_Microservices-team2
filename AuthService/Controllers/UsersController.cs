@@ -19,7 +19,14 @@ public sealed class UsersController(IMediator mediator) : ControllerBase
         [FromBody] UpdateProfileCommand command,
         CancellationToken cancellationToken)
     {
-        var profile = await mediator.Send(command, cancellationToken);
-        return Ok(EndpointResponse<UserProfileResponse>.Success(profile));
+        var result = await mediator.Send(command, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(
+                EndpointResponse<UserProfileResponse>.Failure(result.ErrorCode, result.Message));
+        }
+
+        return Ok(EndpointResponse<UserProfileResponse>.Success(result.Data, result.Message));
     }
 }
