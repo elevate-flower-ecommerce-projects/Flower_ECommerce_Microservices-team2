@@ -1,11 +1,11 @@
-﻿using AuthService.Common.Enums;
+using AuthService.Common.Enums;
 using AuthService.Common.Interface;
 using AuthService.Common.ResultPattern;
 using FluentValidation;
 
-namespace AuthService.Features.CustomerRegistration.Command
+namespace AuthService.Features.CustomerRegistration.Command.Customer
 {
-    public record CustomerRegistrationCommand(string FullName, string Email, string PhoneNumber, Gender Gender, string Password, string ConfirmPassword) : ICommand<RequestResult<bool>>;
+    public record CustomerRegistrationCommand(string FullName, string Email, string PhoneNumber, Gender Gender, string Password, string ConfirmPassword) : ICommand<RequestResult<long>>;
 
     public class CustomerRegistrationCommandValidator : AbstractValidator<CustomerRegistrationCommand>
     {

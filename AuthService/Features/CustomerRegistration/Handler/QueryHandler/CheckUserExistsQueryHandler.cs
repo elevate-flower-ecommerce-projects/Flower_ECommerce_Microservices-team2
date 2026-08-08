@@ -1,11 +1,11 @@
+
 using AuthService.Common.BaseHandler;
-using AuthService.Common.Enums;
 using AuthService.Common.ResultPattern;
 using AuthService.Features.CustomerRegistration.Query;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthService.Features.CustomerRegistration.QueryHandler
+namespace AuthService.Features.CustomerRegistration.Handler.QueryHandler
 {
     public class CheckUserExistsQueryHandler : BaseHandler<CheckUserExistsQuery, RequestResult<bool>>
     {
