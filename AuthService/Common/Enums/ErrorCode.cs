@@ -49,6 +49,15 @@ namespace AuthService.Common.Enums
         [Description("Email not confirmed.")]
         EmailNotConfirmed = 504,
 
+        [Description("Current password is incorrect.")]
+        InvalidCurrentPassword = 505,
+
+        [Description("New password and confirmation do not match.")]
+        PasswordMismatch = 506,
+
+        [Description("New password must be different from the current password.")]
+        PasswordReuse = 507,
+
         [Description("User not found.")]
         UserNotFound = 1008,
 
