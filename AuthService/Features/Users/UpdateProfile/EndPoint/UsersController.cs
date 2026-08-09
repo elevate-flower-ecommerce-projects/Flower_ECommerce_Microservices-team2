@@ -26,7 +26,7 @@ public sealed class UsersController(IMediator mediator) : ControllerBase
         {
             return BadRequest(
                 EndpointResponse<UserProfileResponse>.Failure(result.ErrorCode, result.Message));
-        }     
+        }
         return Ok(EndpointResponse<UserProfileResponse>.Success(result.Data, result.Message));
     }
 
