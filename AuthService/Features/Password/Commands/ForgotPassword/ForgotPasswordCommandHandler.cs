@@ -34,7 +34,7 @@ namespace AuthService.Features.Password.Commands.ForgotPassword
                 Id = _snowflake.CreateId(),
                 UserId = user.Id,
                 GeneratedCode = otpCode,
-                ExpireDate = DateTime.UtcNow.AddMinutes(10), // valid for 10 minutes
+                ExpireDate = DateTime.UtcNow.AddMinutes(10), 
                 CreatedAt = DateTime.UtcNow
             };
             await _context.OtpVerificationCodes.AddAsync(otp, cancellationToken);

@@ -1,6 +1,5 @@
 ﻿using AuthService.Common.BaseHandler;
 using AuthService.Common.Enums;
-using AuthService.Common.Exceptions;
 using AuthService.Common.Helpers;
 using AuthService.Common.ResultPattern;
 using Microsoft.EntityFrameworkCore;
@@ -18,20 +17,20 @@ public class ChangePasswordCommandHandler : BaseHandler<ChangePasswordCommand, R
         long userId = _currentUserService.UserId;
         if (userId == 0)
         {
-            throw new BusinessException(ErrorCode.Unauthorized, "User is not authenticated.");
+            return RequestResult<bool>.Failure(ErrorCode.Unauthorized, "User is not authenticated.");
         }
         // 2. Find user in database
         var user = await _context.Users
             .AsTracking()
             .FirstOrDefaultAsync(u => u.Id == userId && !u.IsDeleted, cancellationToken);
-        if (user == null)
+        if (user is null)
         {
-            throw new BusinessException(ErrorCode.BadRequest, "User not found.");
+            return RequestResult<bool>.Failure(ErrorCode.BadRequest, "User not found.");
         }
         // 3. Verify current password
         if (!PasswordHasher.Verify(request.CurrentPassword, user.Password))
         {
-            throw new BusinessException(ErrorCode.BadRequest, "Incorrect current password.");
+            return RequestResult<bool>.Failure(ErrorCode.BadRequest, "Incorrect current password.");
         }
         // 4. Hash and save new password
         user.Password = PasswordHasher.Hash(request.NewPassword);

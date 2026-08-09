@@ -1,6 +1,5 @@
 ﻿using AuthService.Common.BaseHandler;
 using AuthService.Common.Enums;
-using AuthService.Common.Exceptions;
 using AuthService.Common.Helpers;
 using AuthService.Common.ResultPattern;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +24,7 @@ namespace AuthService.Features.Password.Commands.ResetPassword
                 .FirstOrDefaultAsync(u => u.Email == request.Email && !u.IsDeleted, cancellationToken);
             if (user == null)
             {
-                throw new BusinessException(ErrorCode.BadRequest, "User not found.");
+                return RequestResult<bool>.Failure(ErrorCode.BadRequest, "User not found.");
             }
 
             // 2. Validate OTP
@@ -35,16 +34,16 @@ namespace AuthService.Features.Password.Commands.ResetPassword
                                           && o.GeneratedCode == request.OtpCode
                                           && o.ExpireDate > DateTime.UtcNow
                                           && !o.IsDeleted, cancellationToken);
-            if (otp == null)
+            if (otp is null)
             {
-                throw new BusinessException(ErrorCode.BadRequest, "Invalid or expired OTP code.");
+                return RequestResult<bool>.Failure(ErrorCode.BadRequest, "Invalid or expired OTP code.");
             }
 
             // 3. Update password
             user.Password = PasswordHasher.Hash(request.NewPassword);
             _context.Users.Update(user);
 
-            // 4. Soft-delete OTP code (setting IsDeleted = true)
+            // 4. Soft-delete OTP code
             otp.IsDeleted = true;
             _context.OtpVerificationCodes.Update(otp);
             return RequestResult<bool>.Success(true, "Password has been reset successfully.");

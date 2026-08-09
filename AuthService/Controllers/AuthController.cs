@@ -51,7 +51,7 @@ public class AuthController : ControllerBase
                 success = true,
                 message = "Database connection successful",
                 data = result
-            });
+             });
         }
         catch (Exception ex)
         {
@@ -70,8 +70,8 @@ public class AuthController : ControllerBase
     /// <param name="request">Forgot Password request containing user email.</param>
     /// <returns>Endpoint response.</returns>
     [HttpPost("forgot-password")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
     {
         var command = request.Adapt<ForgotPasswordCommand>();
@@ -88,8 +88,8 @@ public class AuthController : ControllerBase
     /// <param name="request">Reset Password parameters.</param>
     /// <returns>Endpoint response.</returns>
     [HttpPost("reset-password")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
     {
         var command = request.Adapt<ResetPasswordCommand>();
@@ -107,9 +107,9 @@ public class AuthController : ControllerBase
     /// <returns>Endpoint response.</returns>
     [Authorize]
     [HttpPost("change-password")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         var command = request.Adapt<ChangePasswordCommand>();
