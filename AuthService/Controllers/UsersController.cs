@@ -18,12 +18,6 @@ public sealed class UsersController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(EndpointResponse<UserProfileResponse>), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<EndpointResponse<UserProfileResponse>>> UpdateProfile(
         [FromBody] UpdateProfileCommand command,
-    [HttpPut("me/password")]
-    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<EndpointResponse<bool>>> ChangePassword(
-        [FromBody] ChangePasswordCommand command,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
@@ -32,10 +26,23 @@ public sealed class UsersController(IMediator mediator) : ControllerBase
         {
             return BadRequest(
                 EndpointResponse<UserProfileResponse>.Failure(result.ErrorCode, result.Message));
-        }
-            return BadRequest(EndpointResponse<bool>.Failure(result.ErrorCode, result.Message));
-
+        }     
         return Ok(EndpointResponse<UserProfileResponse>.Success(result.Data, result.Message));
+    }
+
+    [HttpPut("me/password")]
+    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(EndpointResponse<bool>), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<EndpointResponse<bool>>> ChangePassword(
+        [FromBody] ChangePasswordCommand command, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(command, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+           return BadRequest(EndpointResponse<bool>.Failure(result.ErrorCode, result.Message));
+        }
         return Ok(EndpointResponse<bool>.Success(result.Data, result.Message));
     }
 }
