@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthService.Controllers;
+namespace AuthService.Features.Password.EndPoints;
 
 /// <summary>
 /// Handles Forgot/Reset Password.
