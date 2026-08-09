@@ -5,7 +5,7 @@ using AuthService.Features.CustomerRegistration.Query;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthService.Features.CustomerRegistration.Handler.QueryHandler
+namespace AuthService.Features.CustomerRegistration.Query.Handler
 {
     public class GetOtpByUserIdAndCodeQueryHandler : BaseHandler<GetOtpByUserIdAndCodeQuery, RequestResult<OtpVerificationDto?>>
     {

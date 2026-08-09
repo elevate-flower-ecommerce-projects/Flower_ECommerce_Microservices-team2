@@ -11,6 +11,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Common\PersonType\**" />
+    <Compile Remove="Features\CustomerRegistration\QueryHandler\**" />
+    <Content Remove="Features\Common\PersonType\**" />
+    <Content Remove="Features\CustomerRegistration\QueryHandler\**" />
+    <EmbeddedResource Remove="Features\Common\PersonType\**" />
+    <EmbeddedResource Remove="Features\CustomerRegistration\QueryHandler\**" />
+    <None Remove="Features\Common\PersonType\**" />
+    <None Remove="Features\CustomerRegistration\QueryHandler\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include=".\.dockerignore" Link=".dockerignore">
       <DependentUpon>$(DockerDefaultDockerfile)</DependentUpon>
     </None>
@@ -25,8 +36,6 @@
     <!-- Validation -->
     <PackageReference Include="FluentValidation" Version="12.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.24" />
-    <PackageReference Include="Hangfire.SqlServer" Version="1.8.24" />
     <PackageReference Include="MailKit" Version="4.17.0" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
     <!-- Snowflake ID -->
@@ -44,9 +53,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
 
     <!-- OpenAPI / Swagger -->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
-    <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 
     <!-- Azure Key Vault (Production Secrets Management) -->
     <PackageReference Include="Azure.Identity" Version="1.15.0" />
@@ -64,8 +72,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Common\PersonType\Query\" />
-    <Folder Include="Features\CustomerRegistration\QueryHandler\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

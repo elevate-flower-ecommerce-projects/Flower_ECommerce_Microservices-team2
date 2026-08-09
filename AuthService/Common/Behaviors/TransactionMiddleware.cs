@@ -17,6 +17,10 @@ namespace AuthService.Common.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
+            // If the request explicitly opts out of transactions, continue without starting one
+            if (request is INoTransaction)
+                return await next();
+
             // If we're already inside a transaction (nested call), just continue
             if (_context.Database.CurrentTransaction != null)
                 return await next();
