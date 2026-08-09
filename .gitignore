@@ -368,3 +368,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /.env
 /AuthService/appsettings.Development.json
+/AuthService/appsettings.json
