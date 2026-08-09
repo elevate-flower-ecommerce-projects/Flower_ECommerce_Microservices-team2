@@ -17,5 +17,3 @@ public sealed record UpdateProfileDocument(
     string DocumentType,
     long DocumentSize);
 
-public sealed record UpdateProfileDocumentCommand(
-    UpdateProfileDocument Document) : ICommand<RequestResult<UserDocumentResponse>>;
