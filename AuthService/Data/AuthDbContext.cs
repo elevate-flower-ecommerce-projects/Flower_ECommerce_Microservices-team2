@@ -27,7 +27,6 @@ public class AuthDbContext : DbContext
 
     // ─── DbSets ────────────────────────────────────────────────────────────────
     public DbSet<Status>               Statuses              => Set<Status>();
-    public DbSet<PersonType>           PersonTypes           => Set<PersonType>();
     public DbSet<User>                 Users                 => Set<User>();
     public DbSet<Role>                 Roles                 => Set<Role>();
     public DbSet<UserRole>             UserRoles             => Set<UserRole>();
@@ -46,7 +45,9 @@ public class AuthDbContext : DbContext
             {
                 case EntityState.Added:
                     entry.Entity.CreatedAt = DateTime.UtcNow;
-                    entry.Entity.CreatedBy = _currentUserService.UserId;
+                    entry.Entity.CreatedBy = _currentUserService.UserId != 0
+                        ? _currentUserService.UserId
+                        : (entry.Entity.Id != 0 ? entry.Entity.Id : 0);
                     break;
 
                 case EntityState.Modified:

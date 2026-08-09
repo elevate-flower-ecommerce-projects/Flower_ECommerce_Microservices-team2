@@ -1,49 +1,51 @@
+using Microsoft.OpenApi.Models;
+
 namespace AuthService.Configurations.DependencyInjection
 {
     public static class SwaggerConfiguration
     {
         public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
         {
-            // ── OpenAPI spec (.NET 10 native) ─────────────────────────────────────
-            // Generates the raw JSON spec at /openapi/v1.json
-            services.AddOpenApi("v1", options =>
+            services.AddEndpointsApiExplorer();
+
+            services.AddSwaggerGen(opt =>
             {
-                options.AddDocumentTransformer((document, context, _) =>
+                opt.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    document.Info = new()
+                    Title = "AuthService API",
+                    Version = "v1",
+                    Description = "Authentication and User Management Microservice"
+                });
+
+                opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    Description = "Enter your JWT token.",
+                    In = ParameterLocation.Header
+                });
+
+                opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
                     {
-                        Title       = "Auth Service API",
-                        Version     = "v1",
-                        Description = "Handles authentication, authorization, user management, and token operations."
-                    };
-                    return Task.CompletedTask;
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
                 });
             });
-
-            // ── Swashbuckle UI ─────────────────────────────────────────────────────
-            services.AddEndpointsApiExplorer();
 
             return services;
         }
 
-        public static WebApplication UseSwaggerConfiguration(this WebApplication app)
-        {
-            // Enabled in Development and Docker environments so the UI is reachable
-            if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
-            {
-                app.MapOpenApi(); // → /openapi/v1.json (native .NET 10)
-
-                app.UseSwaggerUI(ui =>
-                {
-                    ui.SwaggerEndpoint("/openapi/v1.json", "Auth Service v1");
-                    ui.RoutePrefix           = "swagger";       // → http://localhost:5000/swagger
-                    ui.DocumentTitle         = "Auth Service API";
-                    ui.DisplayRequestDuration();                // shows each request's execution time in ms
-                    ui.EnableTryItOutByDefault();               // "Try it out" open by default
-                });
-            }
-
-            return app;
-        }
+       
     }
 }

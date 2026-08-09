@@ -1,11 +1,12 @@
 namespace AuthService.Entities;
 
-/// <summary>
-/// Represents an authorization role (e.g. Admin, Driver, Customer).
-/// </summary>
+using AuthService.Common.Enums;
+
 public class Role : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
+
+    public PersonTypeEnum PersonType { get; set; }
 
     // Navigation properties
     public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();

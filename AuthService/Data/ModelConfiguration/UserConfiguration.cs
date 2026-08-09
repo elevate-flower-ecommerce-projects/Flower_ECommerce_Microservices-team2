@@ -38,11 +38,6 @@ namespace AuthService.Data.ModelConfiguration
 
             builder.Property(u => u.Gender)
                    .HasConversion<string>();
-
-            builder.HasOne(u => u.PersonType)
-                   .WithMany(p => p.Users)
-                   .HasForeignKey(u => u.PersonTypeId)
-                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
