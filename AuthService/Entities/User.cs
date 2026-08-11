@@ -17,6 +17,8 @@ public class User : BaseEntity
 
     public string Password { get; set; } = string.Empty;
 
+    public DateTime? PasswordChangedAt { get; set; }
+
     public bool IsEmailConfirmed { get; set; } = false;
 
     public bool IsBlocked { get; set; } = false;

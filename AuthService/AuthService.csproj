@@ -11,12 +11,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\**" />
     <Compile Remove="Features\Common\PersonType\**" />
     <Compile Remove="Features\CustomerRegistration\QueryHandler\**" />
+    <Content Remove="Controllers\**" />
     <Content Remove="Features\Common\PersonType\**" />
     <Content Remove="Features\CustomerRegistration\QueryHandler\**" />
+    <EmbeddedResource Remove="Controllers\**" />
     <EmbeddedResource Remove="Features\Common\PersonType\**" />
     <EmbeddedResource Remove="Features\CustomerRegistration\QueryHandler\**" />
+    <None Remove="Controllers\**" />
     <None Remove="Features\Common\PersonType\**" />
     <None Remove="Features\CustomerRegistration\QueryHandler\**" />
   </ItemGroup>

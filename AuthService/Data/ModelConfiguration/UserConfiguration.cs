@@ -36,6 +36,8 @@ namespace AuthService.Data.ModelConfiguration
                    .IsRequired()
                    .HasMaxLength(512);
 
+            builder.Property(u => u.PasswordChangedAt);
+
             builder.Property(u => u.Gender)
                    .HasConversion<string>();
         }
