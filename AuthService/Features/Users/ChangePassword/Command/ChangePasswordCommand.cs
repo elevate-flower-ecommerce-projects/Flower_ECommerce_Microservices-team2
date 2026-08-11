@@ -1,6 +1,8 @@
 using AuthService.Common.Interface;
 using AuthService.Common.ResultPattern;
 
+namespace AuthService.Features.Users.ChangePassword;
+
 public sealed record ChangePasswordCommand(
     string CurrentPassword,
     string NewPassword,
