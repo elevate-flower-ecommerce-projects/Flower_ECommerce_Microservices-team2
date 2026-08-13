@@ -2,12 +2,10 @@ using AuthService.Common.Enums;
 using AuthService.Common.ResultPattern;
 using AuthService.Features.UserManagement.LoginFeature.Command;
 using AuthService.Features.UserManagement.LoginFeature.Dto;
-using AuthService.Features.UserManagement.LoginFeature.Extension;
 using AuthService.Features.UserManagement.LoginFeature.Orchestrator;
 using AuthService.Features.UserManagement.LoginFeature.Queries;
 using AuthService.Features.UserManagement.LoginFeature.ViewModel;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.Features.UserManagement.LoginFeature.LoginEndPoint
@@ -26,7 +24,7 @@ namespace AuthService.Features.UserManagement.LoginFeature.LoginEndPoint
         [HttpPost]
         public async Task<EndpointResponse<TokenResponse>> Login([FromBody] LoginRequestVm request, CancellationToken ct)
         {
-            var requestResult = await _mediator.Send(request.ToCommand(), ct);
+            var requestResult = await _mediator.Send(new GenerateTokenOrchestrator(request.Email, request.Password), ct);
 
             if (!requestResult.IsSuccess)
                 return EndpointResponse<TokenResponse>.Failure(requestResult.ErrorCode, requestResult.Message);
