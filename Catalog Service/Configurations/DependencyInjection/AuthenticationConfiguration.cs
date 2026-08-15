@@ -15,8 +15,8 @@ namespace Catalog_Service.Configurations.DependencyInjection
             if (string.IsNullOrWhiteSpace(secretKey))
             {
                 throw new InvalidOperationException(
-                    "Missing 'Jwt:Key' configuration. It must match the key AuthService signs tokens with " +
-                    "(supply it via the Jwt__Key environment variable or user-secrets).");
+                    "Missing 'Jwt:JWT_SECRET' configuration. It must match the key AuthService signs tokens with " +
+                    "(supply it via the JWT_SECRET environment variable or user-secrets).");
             }
 
             // UTF8 — must match the encoding AuthService uses when signing (GenerateJwtTokenHandler).

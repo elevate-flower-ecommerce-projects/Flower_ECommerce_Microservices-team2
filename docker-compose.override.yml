@@ -21,6 +21,10 @@ services:
       # Tell ASP.NET Core which environment config to load (appsettings.Docker.json)
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      # ── HTTPS dev certificate ──────────────────────────────────────────────
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=DevCertPassword123!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       # Override the connection string at runtime using the SA_PASSWORD from .env
       - ConnectionStrings__AuthDb=Server=sqlserver,1433;Database=AuthDb;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
       - IdGen__MachineId=${IDGEN_MACHINE_ID:-0}
@@ -34,12 +38,17 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${USERPROFILE}/.aspnet/https:/https:ro
 
   # ── Catalog Service (dev overrides) ──────────────────────────────────────
   catalogservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      # ── HTTPS dev certificate ──────────────────────────────────────────────
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=DevCertPassword123!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ConnectionStrings__CatalogServiceDb=Server=sqlserver,1433;Database=CatalogServiceDb;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
       - IdGen__MachineId=${IDGEN_MACHINE_ID:-0}
       # ── JWT — must be byte-identical to what AuthService signs with, or the
@@ -53,6 +62,7 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${USERPROFILE}/.aspnet/https:/https:ro
 
   # ── SQL Server (dev overrides) ────────────────────────────────────────────
   sqlserver:

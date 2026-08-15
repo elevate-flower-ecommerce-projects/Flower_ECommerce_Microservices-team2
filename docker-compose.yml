@@ -36,7 +36,7 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql      # persist database files across restarts
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${MSSQL_SA_PASSWORD}\" -Q \"SELECT 1\" -C"]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S 127.0.0.1 -U sa -P \"${MSSQL_SA_PASSWORD}\" -Q \"SELECT 1\" -C"]
       interval: 15s
       timeout: 10s
       retries: 8
