@@ -22,10 +22,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_HTTP_PORTS=8080
       # Override the connection string at runtime using the SA_PASSWORD from .env
-      - ConnectionStrings__AuthDb=Server=sqlserver,1433;Database=AuthDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - ConnectionStrings__AuthDb=Server=sqlserver,1433;Database=AuthDb;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
       - IdGen__MachineId=${IDGEN_MACHINE_ID:-0}
       # ── JWT secrets injected from .env — never hardcode in appsettings ────────
-      - Jwt__Key=${JWT_KEY}
+      - Jwt__Key=${JWT_SECRET}
       - Jwt__Issuer=${JWT_ISSUER}
       - Jwt__Audience=${JWT_AUDIENCE}
     ports:
@@ -35,7 +35,26 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
+  # ── Catalog Service (dev overrides) ──────────────────────────────────────
+  catalogservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__CatalogServiceDb=Server=sqlserver,1433;Database=CatalogServiceDb;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - IdGen__MachineId=${IDGEN_MACHINE_ID:-0}
+      # ── JWT — must be byte-identical to what AuthService signs with, or the
+      #    tokens it issues will not validate here ──────────────────────────────
+      - Jwt__Key=${JWT_SECRET}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+    ports:
+      - "5002:8080"    # HTTP  → localhost:5002
+      - "5003:8081"    # HTTPS → localhost:5003
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
   # ── SQL Server (dev overrides) ────────────────────────────────────────────
   sqlserver:
     ports:
-      - "1433:1433"    # Expose for SSMS / Azure Data Studio on host machine
+      - "1433:1433"    # Expose for SSMS / Azure Data Studio on host machine

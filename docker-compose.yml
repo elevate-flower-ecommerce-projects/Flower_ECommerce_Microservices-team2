@@ -17,16 +17,26 @@ services:
       sqlserver:
         condition: service_healthy          # wait for SQL Server to pass its health check
 
+  # ── Catalog Service ──────────────────────────────────────────────────────────
+  catalogservice:
+    image: ${DOCKER_REGISTRY-}catalogservice
+    build:
+      context: .                            # build context = repo root (parent of Catalog Service/)
+      dockerfile: Catalog Service/Dockerfile
+    depends_on:
+      sqlserver:
+        condition: service_healthy          # wait for SQL Server to pass its health check
+
   # ── SQL Server 2022 ──────────────────────────────────────────────────────────
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: ${SA_PASSWORD}
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
     volumes:
       - sqlserver_data:/var/opt/mssql      # persist database files across restarts
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${SA_PASSWORD}\" -Q \"SELECT 1\" -C"]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${MSSQL_SA_PASSWORD}\" -Q \"SELECT 1\" -C"]
       interval: 15s
       timeout: 10s
       retries: 8
