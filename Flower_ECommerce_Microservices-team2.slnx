@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="AuthService/AuthService.csproj" Id="b590d5b1-1b80-4916-ad7f-48e3997e51ef" />
   <Project Path="Address &amp; Store Coverage Service/Address &amp; Store Coverage Service.csproj" />
   <Project Path="API Gateway/API Gateway.csproj" />
   <Project Path="Cart ServiceCart Service/Cart ServiceCart Service.csproj" />

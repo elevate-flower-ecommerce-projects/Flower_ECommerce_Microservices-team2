@@ -3,6 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# ── Secrets / Environment files ───────────────────────────────────────────────
+# NEVER commit .env files — they contain passwords and secret keys
+.env
+.env.*
+!.env.example
 # User-specific files
 *.rsuser
 *.suo
@@ -361,3 +366,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/.env
+/AuthService/appsettings.Development.json
+/AuthService/appsettings.json
