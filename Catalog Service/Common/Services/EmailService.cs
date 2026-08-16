@@ -1,6 +1,7 @@
 using Catalog_Service.Common.Settings;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -9,10 +10,12 @@ namespace Catalog_Service.Common.Services;
 public class EmailService : IEmailService
 {
     private readonly EmailSettings _settings;
+    private readonly ILogger<EmailService> _logger;
 
-    public EmailService(IOptions<EmailSettings> options)
+    public EmailService(IOptions<EmailSettings> options, ILogger<EmailService> logger)
     {
         _settings = options.Value;
+        _logger = logger;
     }
 
     // ── General-purpose sender ───────────────────────────────────────────────────
@@ -48,7 +51,10 @@ public class EmailService : IEmailService
     private MimeMessage BuildMessage(string toEmail, string toName, string subject, string htmlBody)
     {
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress(_settings.SenderName, _settings.SenderEmail));
+        var senderName = string.IsNullOrWhiteSpace(_settings.SenderName) ? "Flower E-Commerce" : _settings.SenderName;
+        var senderEmail = string.IsNullOrWhiteSpace(_settings.SenderEmail) ? "no-reply@flower.local" : _settings.SenderEmail;
+
+        message.From.Add(new MailboxAddress(senderName, senderEmail));
         message.To.Add(new MailboxAddress(toName, toEmail));
         message.Subject = subject;
         message.Body = new BodyBuilder { HtmlBody = htmlBody }.ToMessageBody();
@@ -57,12 +63,31 @@ public class EmailService : IEmailService
 
     private async Task DispatchAsync(MimeMessage message, CancellationToken cancellationToken)
     {
-        using var smtp = new SmtpClient();
-        await smtp.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls, cancellationToken);
-        await smtp.AuthenticateAsync(_settings.SenderEmail, _settings.Password, cancellationToken);
-        await smtp.SendAsync(message, cancellationToken);
-        await smtp.DisconnectAsync(true, cancellationToken);
+        if (string.IsNullOrWhiteSpace(_settings.Host))
+        {
+            _logger.LogWarning("Email sending skipped: EmailSettings:Host is not configured.");
+            return;
+        }
+
+        try
+        {
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls, cancellationToken);
+
+            if (!string.IsNullOrWhiteSpace(_settings.SenderEmail) && !string.IsNullOrWhiteSpace(_settings.Password))
+            {
+                await smtp.AuthenticateAsync(_settings.SenderEmail, _settings.Password, cancellationToken);
+            }
+
+            await smtp.SendAsync(message, cancellationToken);
+            await smtp.DisconnectAsync(true, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send email to {ToEmail} with subject '{Subject}'", message.To.ToString(), message.Subject);
+        }
     }
+
 
     private static string BuildOtpEmailBody(string fullName, string otp) => $"""
         <div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:32px;

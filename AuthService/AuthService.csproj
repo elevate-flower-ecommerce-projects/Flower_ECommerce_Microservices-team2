@@ -57,7 +57,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
 
     <!-- OpenAPI / Swagger -->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 
     <!-- Azure Key Vault (Production Secrets Management) -->

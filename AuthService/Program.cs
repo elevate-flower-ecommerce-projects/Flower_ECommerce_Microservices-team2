@@ -1,5 +1,6 @@
 using AuthService.Common.Middelwares;
 using AuthService.Configurations.DependencyInjection;
+using AuthService.Data.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,15 +19,15 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
+await AuthDataSeeder.SeedAsync(app.Services);
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AuthService API v1");
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "AuthService API v1");
+});
+
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 // ── HTTP Pipeline ─────────────────────────────────────────────────────────────
 app.UseHttpsRedirection();

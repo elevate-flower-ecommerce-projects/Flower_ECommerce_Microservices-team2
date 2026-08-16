@@ -1,7 +1,17 @@
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "API Gateway",
+        Version = "v1"
+    });
+});
 
 // Configure YARP Reverse Proxy
 builder.Services.AddReverseProxy()
@@ -9,14 +19,15 @@ builder.Services.AddReverseProxy()
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.MapOpenApi();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Gateway v1");
+});
 
 app.UseHttpsRedirection();
 
+app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapGet("/health", () => Results.Ok(new { status = "Healthy", service = "API Gateway", timestamp = DateTime.UtcNow }));
 
 // Map YARP Reverse Proxy

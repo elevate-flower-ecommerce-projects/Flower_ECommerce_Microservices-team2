@@ -1,4 +1,4 @@
-using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 
 namespace Catalog_Service.Configurations.DependencyInjection
 {
@@ -27,21 +27,23 @@ namespace Catalog_Service.Configurations.DependencyInjection
                     In = ParameterLocation.Header
                 });
 
-                // Microsoft.OpenApi 2.x replaced the inline `Reference = new OpenApiReference { ... }`
-                // pattern with dedicated reference types, and Swashbuckle 10 takes a factory so the
-                // reference can be resolved against the host document.
-                opt.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+                opt.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
-                        new OpenApiSecuritySchemeReference("Bearer", document),
-                        new List<string>()
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
                     }
                 });
             });
 
             return services;
         }
-
-
     }
 }

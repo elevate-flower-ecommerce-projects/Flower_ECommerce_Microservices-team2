@@ -13,22 +13,13 @@ builder.Services.AddAuthenticationConfiguration(builder.Configuration); // JWT B
 builder.Services.AddCapConfiguration(builder.Configuration);            // CAP (outbox) + RabbitMQ
 builder.Services.AddSwaggerConfiguration();                              // Swagger + JWT Bearer security definition
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog Service API v1");
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog Service API v1");
+});
 
 app.UseHttpsRedirection();
 
@@ -47,6 +38,8 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
+app.MapGet("/", () => Results.Redirect("/swagger"));
+
 app.MapGet("/weatherforecast", () =>
 {
     var forecast = Enumerable.Range(1, 5).Select(index =>
@@ -61,7 +54,9 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
-app.MapGet("/health", () => Results.Ok(new { status = "Healthy", service = "Catalog Service", timestamp = DateTime.UtcNow }));app.Run();
+app.MapGet("/health", () => Results.Ok(new { status = "Healthy", service = "Catalog Service", timestamp = DateTime.UtcNow }));
+
+app.Run();
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {

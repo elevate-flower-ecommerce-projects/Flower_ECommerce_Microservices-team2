@@ -1,46 +1,66 @@
 services:
 
-  # ── API Gateway ──────────────────────────────────────────────────────────────
   apigateway:
     image: ${DOCKER_REGISTRY-}apigateway
     build:
       context: .
       dockerfile: API Gateway/Dockerfile
 
-  # ── Auth Service ─────────────────────────────────────────────────────────────
   authservice:
     image: ${DOCKER_REGISTRY-}authservice
     build:
-      context: .                            # build context = repo root (parent of AuthService/)
+      context: .
       dockerfile: AuthService/Dockerfile
     depends_on:
       sqlserver:
-        condition: service_healthy          # wait for SQL Server to pass its health check
+        condition: service_healthy
 
-  # ── Catalog Service ──────────────────────────────────────────────────────────
   catalogservice:
     image: ${DOCKER_REGISTRY-}catalogservice
     build:
-      context: .                            # build context = repo root (parent of Catalog Service/)
+      context: .
       dockerfile: Catalog Service/Dockerfile
     depends_on:
       sqlserver:
-        condition: service_healthy          # wait for SQL Server to pass its health check
+        condition: service_healthy
 
-  # ── SQL Server 2022 ──────────────────────────────────────────────────────────
+  cartservice:
+    image: ${DOCKER_REGISTRY-}cartservice
+    build:
+      context: .
+      dockerfile: Cart ServiceCart Service/Dockerfile
+
+  orderservice:
+    image: ${DOCKER_REGISTRY-}orderservice
+    build:
+      context: .
+      dockerfile: Order & Fulfillment Service/Dockerfile
+
+  paymentservice:
+    image: ${DOCKER_REGISTRY-}paymentservice
+    build:
+      context: .
+      dockerfile: Payment Service/Dockerfile
+
+  addressservice:
+    image: ${DOCKER_REGISTRY-}addressservice
+    build:
+      context: .
+      dockerfile: Address & Store Coverage Service/Dockerfile
+
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-Password123!}
     volumes:
-      - sqlserver_data:/var/opt/mssql      # persist database files across restarts
+      - sqlserver_data:/var/opt/mssql
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S 127.0.0.1 -U sa -P \"${MSSQL_SA_PASSWORD}\" -Q \"SELECT 1\" -C"]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S 127.0.0.1 -U sa -P \"${MSSQL_SA_PASSWORD:-Password123!}\" -Q \"SELECT 1\" -C"]
       interval: 15s
       timeout: 10s
       retries: 8
-      start_period: 30s                    # give SQL Server time to initialise on first boot
+      start_period: 30s
 
 volumes:
   sqlserver_data:
