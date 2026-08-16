@@ -16,6 +16,9 @@ namespace Catalog_Service.Common.Enums
         [Description("Category not found.")]
         CategoryNotFound = 2000,
 
+        [Description("Category is no longer available.")]
+        CategoryNoLongerAvailable = 2001,
+
         [Description("Client closed the request before the server could respond.")]
         ClientClosedRequest = 499,
 

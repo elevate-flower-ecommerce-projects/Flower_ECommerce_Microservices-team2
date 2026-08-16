@@ -12,7 +12,7 @@ namespace Catalog_Service.Configurations.DependencyInjection
                 x.UseEntityFramework<CatalogServiceDbContext>();
 
                 // Configure SQL Server (matching the Catalog_Service DB setup)
-                x.UseSqlServer(configuration.GetConnectionString("AuthDb")!);
+                x.UseSqlServer(configuration.GetConnectionString("CatalogServiceDb")!);
 
                 // Configure RabbitMQ as the message broker
                 x.UseRabbitMQ(options =>
