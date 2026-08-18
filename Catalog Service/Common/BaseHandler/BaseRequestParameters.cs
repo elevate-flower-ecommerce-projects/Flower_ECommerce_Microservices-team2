@@ -1,3 +1,4 @@
+using Catalog_Service.Common.Interface;
 using Catalog_Service.Common.Services;
 using Catalog_Service.Data;
 using DotNetCore.CAP;
@@ -11,7 +12,8 @@ public class BaseRequestParameters(
     ICapPublisher capPublisher,
     CatalogServiceDbContext context,
     IUserState userState,
-    CancellationTokenCapture cancellationTokenCapture)
+    CancellationTokenCapture cancellationTokenCapture,
+    IGenericRepository genericRepository)
 {
     public IMediator _mediator { get; } = mediator;
     public IdGen.IIdGenerator<long> _snowflake { get; } = idGenerator;
@@ -19,4 +21,5 @@ public class BaseRequestParameters(
     public CatalogServiceDbContext _context { get; } = context;
     public IUserState _userState { get; } = userState;
     public CancellationTokenCapture _cancellationTokenCapture { get; } = cancellationTokenCapture;
+    public IGenericRepository _genericRepository { get; } = genericRepository;
 }
