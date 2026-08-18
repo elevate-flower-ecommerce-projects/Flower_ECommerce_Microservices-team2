@@ -28,7 +28,10 @@ namespace AuthService.Features.UserManagement.LoginFeature.Command.Handler
         {
             try
             {
-                var secretKey = _configuration["Jwt:Key"];
+                var secretKey = _configuration["Jwt:Key"] 
+                             ?? _configuration["JwtSettings:Secret"] 
+                             ?? _configuration["Jwt:Secret"] 
+                             ?? "YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS";
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
                 var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

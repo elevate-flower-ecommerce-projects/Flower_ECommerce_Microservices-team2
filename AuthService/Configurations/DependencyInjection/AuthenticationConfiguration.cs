@@ -12,7 +12,11 @@ namespace AuthService.Configurations.DependencyInjection
         public static IServiceCollection AddAuthenticationConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtSettings = configuration.GetSection("Jwt");
-            var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
+            var secretKey = jwtSettings["Key"] 
+                         ?? configuration["JwtSettings:Secret"] 
+                         ?? configuration["Jwt:Secret"] 
+                         ?? "YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS";
+            var key = Encoding.ASCII.GetBytes(secretKey);
 
             services.AddAuthentication(options =>
             {

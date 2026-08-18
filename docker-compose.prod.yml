@@ -95,10 +95,14 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=${MSSQL_DB:-FlowersAuthDb};User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;"
+      ConnectionStrings__AuthDb: "Server=sqlserver,1433;Database=${MSSQL_DB:-AuthDb};User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=${MSSQL_DB:-AuthDb};User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;"
       RabbitMQ__Host: rabbitmq
       RabbitMQ__Username: ${RABBITMQ_USER:-guest}
       RabbitMQ__Password: ${RABBITMQ_PASS:-guest}
+      Jwt__Key: ${JWT_SECRET:-YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS}
+      Jwt__Issuer: ${JWT_ISSUER:-FlowersAuth}
+      Jwt__Audience: ${JWT_AUDIENCE:-FlowersApp}
       JwtSettings__Secret: ${JWT_SECRET:-YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS}
       JwtSettings__Issuer: ${JWT_ISSUER:-FlowersAuth}
       JwtSettings__Audience: ${JWT_AUDIENCE:-FlowersApp}
