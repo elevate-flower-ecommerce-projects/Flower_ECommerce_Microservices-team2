@@ -59,7 +59,7 @@ services:
       - flower_net_team2
 
   apigateway:
-    image: ${DOCKER_USERNAME:-hossammokhtar}/flower-apigateway-team2:latest
+    image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-apigateway-team2:latest
     container_name: flower_apigateway_team2
     restart: unless-stopped
     depends_on:
@@ -76,7 +76,7 @@ services:
       addressstorecoverageservice:
         condition: service_started
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
     ports:
       - "8080:8080"
@@ -84,7 +84,7 @@ services:
       - flower_net_team2
 
   authservice:
-    image: ${DOCKER_USERNAME:-hossammokhtar}/flower-identity-service-team2:latest
+    image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-identity-service-team2:latest
     container_name: flower_identity_service_team2
     restart: unless-stopped
     depends_on:
@@ -93,7 +93,7 @@ services:
       rabbitmq:
         condition: service_healthy
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
       ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=${MSSQL_DB:-FlowersAuthDb};User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;"
       RabbitMQ__Host: rabbitmq
@@ -102,56 +102,68 @@ services:
       JwtSettings__Secret: ${JWT_SECRET:-YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS}
       JwtSettings__Issuer: ${JWT_ISSUER:-FlowersAuth}
       JwtSettings__Audience: ${JWT_AUDIENCE:-FlowersApp}
+    ports:
+      - "5022:8080"
     networks:
       - flower_net_team2
 
   catalogservice:
-    image: ${DOCKER_USERNAME:-hossammokhtar}/flower-catalog-service-team2:latest
+    image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-catalog-service-team2:latest
     container_name: flower_catalog_service_team2
     restart: unless-stopped
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
+    ports:
+      - "5129:8080"
     networks:
       - flower_net_team2
 
   cartservice:
-    image: ${DOCKER_USERNAME:-hossammokhtar}/flower-cart-service-team2:latest
+    image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-cart-service-team2:latest
     container_name: flower_cart_service_team2
     restart: unless-stopped
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
+    ports:
+      - "5292:8080"
     networks:
       - flower_net_team2
 
   orderfulfillmentservice:
-    image: ${DOCKER_USERNAME:-hossammokhtar}/flower-order-service-team2:latest
+    image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-order-service-team2:latest
     container_name: flower_order_service_team2
     restart: unless-stopped
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
+    ports:
+      - "5109:8080"
     networks:
       - flower_net_team2
 
   paymentservice:
-    image: ${DOCKER_USERNAME:-hossammokhtar}/flower-payment-service-team2:latest
+    image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-payment-service-team2:latest
     container_name: flower_payment_service_team2
     restart: unless-stopped
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
+    ports:
+      - "5260:8080"
     networks:
       - flower_net_team2
 
   addressstorecoverageservice:
-    image: ${DOCKER_USERNAME:-hossammokhtar}/flower-address-service-team2:latest
+    image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-address-service-team2:latest
     container_name: flower_address_service_team2
     restart: unless-stopped
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
+    ports:
+      - "5272:8080"
     networks:
       - flower_net_team2
 

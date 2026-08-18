@@ -16,15 +16,16 @@ Welcome to the official **CI/CD Pipeline Guidebook** for Team 2's Flower E-Comme
 ## Chapter 1: Overview & Architecture
 
 ### Purpose
-The CI/CD pipeline automates image compilation and publishing for Team 2's microservices platform. Every time code is pushed to `main` or `master`, GitHub Actions automatically:
-- Builds container images for all Team 2 microservices in parallel.
-- Pushes Docker images to **Docker Hub** using matrix tag names.
+The CI/CD pipeline automates image compilation and publishing for Team 2's microservices platform. Every time code is pushed to `main`, `master`, or `Development`, GitHub Actions automatically:
+- Builds container images for all 7 Team 2 microservices in parallel.
+- Pushes Docker images to **Docker Hub** (`soloprogrammer88`) using matrix tag names.
 
 ### Team 2 Microservices Map
 
 | Service Name | Dockerfile Location | Docker Hub Image Name |
 | :--- | :--- | :--- |
 | **API Gateway** | `./API Gateway/Dockerfile` | `flower-apigateway-team2` |
+| **Auth Service / Identity** | `./AuthService/Dockerfile` | `flower-identity-service-team2` |
 | **Address & Store Coverage** | `./Address & Store Coverage Service/Dockerfile` | `flower-address-service-team2` |
 | **Cart Service** | `./Cart ServiceCart Service/Dockerfile` | `flower-cart-service-team2` |
 | **Catalog Service** | `./Catalog Service/Dockerfile` | `flower-catalog-service-team2` |
@@ -35,22 +36,11 @@ The CI/CD pipeline automates image compilation and publishing for Team 2's micro
 
 ## Chapter 2: Prerequisites & Secrets Setup (Docker Hub & GitHub)
 
-### Step 1: Create a Docker Hub Account
-1. Go to [https://hub.docker.com](https://hub.docker.com).
-2. Sign up or log in. Your Docker ID is your `DOCKER_USERNAME`.
-
-### Step 2: Generate a Personal Access Token (PAT)
-1. Go to **Account Settings > Personal Access Tokens** on Docker Hub.
-2. Click **Generate New Token**.
-3. Description: `GitHub Actions Team 2 CI CD`.
-4. Copy the generated token string.
-
-### Step 3: Configure GitHub Repository Secrets
-1. Go to Team 2's GitHub repository settings.
-2. Go to **Secrets and variables > Actions > New repository secret**.
-3. Add:
-   - `DOCKER_USERNAME`: Your Docker Hub username.
-   - `DOCKER_PASSWORD`: The Personal Access Token (PAT).
+### Step 1: GitHub Repository Secrets Configuration
+1. Go to Team 2's GitHub repository settings (**Settings > Secrets and variables > Actions**).
+2. Add the following secrets:
+   - `DOCKER_USERNAME`: `soloprogrammer88`
+   - `DOCKER_PASSWORD`: `<YOUR_DOCKER_HUB_PERSONAL_ACCESS_TOKEN>`
 
 ---
 

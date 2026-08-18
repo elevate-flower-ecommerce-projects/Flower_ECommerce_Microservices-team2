@@ -16,6 +16,9 @@ jobs:
           - service_name: apigateway
             dockerfile: "API Gateway/Dockerfile"
             image_name: flower-apigateway-team2
+          - service_name: authservice
+            dockerfile: "AuthService/Dockerfile"
+            image_name: flower-identity-service-team2
           - service_name: address-service
             dockerfile: "Address & Store Coverage Service/Dockerfile"
             image_name: flower-address-service-team2
