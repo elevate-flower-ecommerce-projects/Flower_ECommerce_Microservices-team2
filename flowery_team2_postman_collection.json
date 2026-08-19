@@ -1,8 +1,8 @@
 {
   "info": {
     "_postman_id": "flowery-team2-api-gateway-collection",
-    "name": "Flowery E-Commerce API Gateway (Team 2 Exact Mappings)",
-    "description": "Complete Postman Collection for Team 2 Microservices with exact mapped controller endpoints routed through YARP API Gateway (Port 8080).",
+    "name": "Flowery E-Commerce API Gateway (Team 2 - Updated Endpoints)",
+    "description": "Updated Postman Collection for Team 2 Microservices including all newly pulled Catalog, Occasions, Categories, Products by Category/Occasion, and Sections endpoints (Port 8080).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -116,7 +116,7 @@
       ]
     },
     {
-      "name": "Authentication (Team 2 Exact Mappings)",
+      "name": "Authentication",
       "item": [
         {
           "name": "Login",
@@ -275,7 +275,7 @@
       ]
     },
     {
-      "name": "User Profile (Team 2 Exact Mappings)",
+      "name": "User Profile",
       "item": [
         {
           "name": "Update Profile",
@@ -376,10 +376,10 @@
       ]
     },
     {
-      "name": "Catalog (Team 2 Exact Mappings)",
+      "name": "Catalog & Sections (Newly Pulled Endpoints)",
       "item": [
         {
-          "name": "Get Categories",
+          "name": "Get All Categories",
           "request": {
             "method": "GET",
             "header": [],
@@ -391,38 +391,91 @@
           }
         },
         {
-          "name": "Get Categories Direct",
+          "name": "Get Products by Category ID",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/categories",
+              "raw": "{{baseUrl}}/catalog/categories/:categoryId/products",
               "host": ["{{baseUrl}}"],
-              "path": ["categories"]
+              "path": ["catalog", "categories", ":categoryId", "products"],
+              "variable": [
+                {
+                  "key": "categoryId",
+                  "value": "1"
+                }
+              ]
             }
           }
         },
         {
-          "name": "Get Products",
+          "name": "Get All Occasions",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/catalog/products",
+              "raw": "{{baseUrl}}/catalog/occasions?page=1&pageSize=10",
               "host": ["{{baseUrl}}"],
-              "path": ["catalog", "products"]
+              "path": ["catalog", "occasions"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
             }
           }
         },
         {
-          "name": "Get Products Direct",
+          "name": "Get Products by Occasion ID",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/products",
+              "raw": "{{baseUrl}}/catalog/occasions/:occasionId/products",
               "host": ["{{baseUrl}}"],
-              "path": ["products"]
+              "path": ["catalog", "occasions", ":occasionId", "products"],
+              "variable": [
+                {
+                  "key": "occasionId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Sections (Home)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "sections"]
+            }
+          }
+        },
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/products?categoryId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "products"],
+              "query": [
+                {
+                  "key": "categoryId",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
             }
           }
         }
