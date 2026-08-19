@@ -3,23 +3,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog_Service.Features.Catalog.Shared;
 
-public static class PaginationHelper
-{
+public static class PaginationHelper {
     public static async Task<PagedResult<T>> ToPagedResultAsync<T>(
           this IQueryable<T> query,
           int page,
-          int PageSize,
-          CancellationToken cancellationToken = default)
-    {
+          int pageSize,
+          CancellationToken cancellationToken = default) {
+
         page = page < 1 ? 1 : page;
-        PageSize = PageSize < 1 ? 10 : PageSize;
+        pageSize = pageSize < 1 ? 10 : pageSize;
         var total = await query.CountAsync(cancellationToken);
-        var totalPages = (int)Math.Ceiling(total / (double)PageSize);
+        var totalPages = (int)Math.Ceiling(total / (double)pageSize);
         var data = await query
-            .Skip((page - 1) * PageSize)
-            .Take(PageSize)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return new PagedResult<T>(data, page, PageSize, total, totalPages);
+        return new PagedResult<T>(data, page, pageSize, total, totalPages);
     }
 }

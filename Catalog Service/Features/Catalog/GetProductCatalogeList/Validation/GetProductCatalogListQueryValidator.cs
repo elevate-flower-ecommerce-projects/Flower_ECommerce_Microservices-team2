@@ -2,10 +2,8 @@
 
 namespace Catalog_Service.Features.Catalog.GetProductCatalogeList.Query;
 
-public class GetProductCatalogListQueryValidator : AbstractValidator<GetProductCatalogListQuery>
-{
-    public GetProductCatalogListQueryValidator()
-    {
+public class GetProductCatalogListQueryValidator : AbstractValidator<GetProductCatalogListQuery> {
+    public GetProductCatalogListQueryValidator() {
         RuleFor(x => x.PageNumber)
             .GreaterThanOrEqualTo(1)
             .WithMessage("PageNumber must be at least 1.");
