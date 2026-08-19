@@ -1,5 +1,6 @@
 using Catalog_Service.Common.Middelwares;
 using Catalog_Service.Configurations.DependencyInjection;
+using Catalog_Service.Data.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,18 +17,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    try
-    {
-        var db = scope.ServiceProvider.GetRequiredService<Catalog_Service.Data.CatalogServiceDbContext>();
-        await Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.MigrateAsync(db.Database);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error migrating CatalogServiceDb: {ex.Message}");
-    }
-}
+await CatalogDataSeeder.SeedAsync(app.Services);
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
