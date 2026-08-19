@@ -35,7 +35,6 @@
   <ItemGroup>
     <Folder Include="Features\Catalog\GetProductCatalogeList\EndPoint\" />
     <Folder Include="Features\Catalog\GetProductCatalogeList\Orchestrator\" />
-    <Folder Include="Features\Catalog\GetProductCatalogeList\Validation\" />
   </ItemGroup>
 
 </Project>

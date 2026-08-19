@@ -14,7 +14,7 @@ public record GetProductCatalogListQuery(
 public sealed record ProductCatalogResultDto (
     long ProductId,
     string ProductName,
-    string ImageUrl,
+    string? ImageUrl,
     decimal OriginalPrice,
     decimal? DiscountPercent,
     decimal? DiscountedPrice,
