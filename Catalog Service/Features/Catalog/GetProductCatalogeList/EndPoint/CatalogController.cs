@@ -22,7 +22,13 @@ public sealed class CatalogController(IMediator mediator) : ControllerBase {
         [FromQuery] long? storeId = null,
         CancellationToken cancellationToken = default) {
 
-        var query = new GetProductCatalogListQuery(pageNumber, pageSize, occasionId, categoryId, storeId);
+        var query = new GetProductCatalogListQuery(
+            pageNumber,
+            pageSize,
+            occasionId,
+            categoryId,
+            storeId);
+
         var result = await mediator.Send(query, cancellationToken);
 
         if (result.IsSuccess) {
