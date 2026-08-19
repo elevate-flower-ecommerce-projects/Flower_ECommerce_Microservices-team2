@@ -1,5 +1,7 @@
 using Catalog_Service.Common.Enums;
 using Catalog_Service.Common.ResultPattern;
+using Catalog_Service.Features.Products.Dto;
+using Catalog_Service.Features.Products.Query;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,23 +12,25 @@ namespace Catalog_Service.Features.Products;
 public sealed class ProductsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(typeof(EndpointResponse<IEnumerable<ProductSummaryDto>>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(EndpointResponse<IEnumerable<ProductSummaryDto>>), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(EndpointResponse<IEnumerable<ProductSummaryDto>>), StatusCodes.Status410Gone)]
-    public async Task<ActionResult<EndpointResponse<IEnumerable<ProductSummaryDto>>>> GetProducts(
+    [ProducesResponseType(typeof(EndpointResponse<PagedResult<ProductSummaryDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EndpointResponse<PagedResult<ProductSummaryDto>>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(EndpointResponse<PagedResult<ProductSummaryDto>>), StatusCodes.Status410Gone)]
+    public async Task<ActionResult<EndpointResponse<PagedResult<ProductSummaryDto>>>> GetProducts(
         [FromQuery] long? categoryId,
-        CancellationToken cancellationToken)
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send(new GetProductsQuery(categoryId), cancellationToken);
+        var result = await mediator.Send(new GetProductsQuery(categoryId, pageNumber, pageSize), cancellationToken);
 
         if (result.IsSuccess)
         {
-            return Ok(EndpointResponse<IEnumerable<ProductSummaryDto>>.Success(
+            return Ok(EndpointResponse<PagedResult<ProductSummaryDto>>.Success(
                 result.Data,
                 result.Message));
         }
 
-        var response = EndpointResponse<IEnumerable<ProductSummaryDto>>.Failure(
+        var response = EndpointResponse<PagedResult<ProductSummaryDto>>.Failure(
             result.ErrorCode,
             result.Message);
 

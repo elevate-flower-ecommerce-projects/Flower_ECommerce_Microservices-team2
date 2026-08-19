@@ -1,5 +1,7 @@
 using Catalog_Service.Common.BaseHandler;
+using Catalog_Service.Common.Interface;
 using Catalog_Service.Common.Middelwares;
+using Catalog_Service.Common.Repositories;
 using Catalog_Service.Common.Services;
 using Catalog_Service.Common.Settings;
 
@@ -24,6 +26,10 @@ namespace Catalog_Service.Configurations.DependencyInjection
             services.AddScoped<GlobalErrorHandlerMiddleware>();
             services.AddScoped<ValidationExceptionHandlingMiddleware>();
             services.AddScoped<BaseRequestParameters>();
+
+            // Generic repository exposing IQueryable table access and pagination.
+            // Injected automatically via BaseRequestParameters into every handler.
+            services.AddScoped<IGenericRepository, GenericRepository>();
 
             // Email service (MailKit)
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
