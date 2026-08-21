@@ -1,8 +1,8 @@
 {
   "info": {
     "_postman_id": "flowery-team2-api-gateway-collection",
-    "name": "Flowery E-Commerce API Gateway (Team 2 - Updated Endpoints)",
-    "description": "Updated Postman Collection for Team 2 Microservices including all newly pulled Catalog, Occasions, Categories, Products by Category/Occasion, and Sections endpoints (Port 8080).",
+    "name": "Flowery E-Commerce API Gateway (Team 2 - Full & Updated Endpoints)",
+    "description": "Comprehensive Postman Collection for Flowery Team 2 Microservices architecture via API Gateway (Port 8080). Includes all Authentication, User Management, Catalog, Categories, Occasions, Storefront Sections, Products, and Health diagnostics endpoints.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -10,13 +10,13 @@
       "key": "baseUrl",
       "value": "http://localhost:8080",
       "type": "string",
-      "description": "API Gateway URL (Port 8080)"
+      "description": "API Gateway Base URL (Port 8080)"
     },
     {
       "key": "bearerToken",
       "value": "",
       "type": "string",
-      "description": "JWT Bearer Token for Authenticated Requests"
+      "description": "JWT Bearer Token for Authenticated Endpoints"
     },
     {
       "key": "acceptLanguage",
@@ -38,7 +38,8 @@
               "raw": "{{baseUrl}}/health",
               "host": ["{{baseUrl}}"],
               "path": ["health"]
-            }
+            },
+            "description": "Checks the health status of the API Gateway reverse proxy."
           }
         },
         {
@@ -50,7 +51,8 @@
               "raw": "{{baseUrl}}/identity/health",
               "host": ["{{baseUrl}}"],
               "path": ["identity", "health"]
-            }
+            },
+            "description": "Checks the health status of the AuthService."
           }
         },
         {
@@ -62,7 +64,8 @@
               "raw": "{{baseUrl}}/catalog/health",
               "host": ["{{baseUrl}}"],
               "path": ["catalog", "health"]
-            }
+            },
+            "description": "Checks the health status of the Catalog Service."
           }
         },
         {
@@ -74,7 +77,8 @@
               "raw": "{{baseUrl}}/cart/health",
               "host": ["{{baseUrl}}"],
               "path": ["cart", "health"]
-            }
+            },
+            "description": "Checks the health status of the Cart Service."
           }
         },
         {
@@ -86,7 +90,8 @@
               "raw": "{{baseUrl}}/order/health",
               "host": ["{{baseUrl}}"],
               "path": ["order", "health"]
-            }
+            },
+            "description": "Checks the health status of the Order & Fulfillment Service."
           }
         },
         {
@@ -98,7 +103,8 @@
               "raw": "{{baseUrl}}/payment/health",
               "host": ["{{baseUrl}}"],
               "path": ["payment", "health"]
-            }
+            },
+            "description": "Checks the health status of the Payment Service."
           }
         },
         {
@@ -110,16 +116,17 @@
               "raw": "{{baseUrl}}/address/health",
               "host": ["{{baseUrl}}"],
               "path": ["address", "health"]
-            }
+            },
+            "description": "Checks the health status of the Address & Store Coverage Service."
           }
         }
       ]
     },
     {
-      "name": "Authentication",
+      "name": "Authentication & Registration",
       "item": [
         {
-          "name": "Login",
+          "name": "Customer Login",
           "event": [
             {
               "listen": "test",
@@ -153,13 +160,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password123!\"\n}"
+              "raw": "{\n  \"email\": \"customer@flowery.com\",\n  \"password\": \"Password123!\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/Login",
               "host": ["{{baseUrl}}"],
               "path": ["api", "Login"]
-            }
+            },
+            "description": "Authenticates user with email and password, returning JWT and Refresh tokens. Automatically saves bearerToken."
           }
         },
         {
@@ -181,7 +189,8 @@
               "raw": "{{baseUrl}}/api/Login/reactivate",
               "host": ["{{baseUrl}}"],
               "path": ["api", "Login", "reactivate"]
-            }
+            },
+            "description": "Generates a new JWT access token using the user's active refresh token in database."
           }
         },
         {
@@ -197,13 +206,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"user@example.com\",\n  \"phoneNumber\": \"+201000000000\",\n  \"gender\": 1,\n  \"password\": \"Password123!\",\n  \"confirmPassword\": \"Password123!\"\n}"
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"customer@flowery.com\",\n  \"phoneNumber\": \"+201000000000\",\n  \"gender\": 1,\n  \"password\": \"Password123!\",\n  \"confirmPassword\": \"Password123!\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/CustomerRegistration/register",
               "host": ["{{baseUrl}}"],
               "path": ["api", "CustomerRegistration", "register"]
-            }
+            },
+            "description": "Registers a new customer account."
           }
         },
         {
@@ -219,17 +229,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Driver Name\",\n  \"email\": \"driver@example.com\",\n  \"phoneNumber\": \"+201011111111\",\n  \"password\": \"DriverPassword123!\",\n  \"confirmPassword\": \"DriverPassword123!\",\n  \"vehicleType\": \"Motorcycle\",\n  \"vehicleNumber\": \"ABC-123\",\n  \"nationalIdNumber\": \"29901011234567\",\n  \"vehicleLicenceImage\": \"https://example.com/license.jpg\",\n  \"nationalIdImage\": \"https://example.com/national_id.jpg\"\n}"
+              "raw": "{\n  \"fullName\": \"Ahmed Hassan\",\n  \"email\": \"driver@flowery.com\",\n  \"phoneNumber\": \"+201011111111\",\n  \"password\": \"DriverPassword123!\",\n  \"confirmPassword\": \"DriverPassword123!\",\n  \"vehicleType\": \"Motorcycle\",\n  \"vehicleNumber\": \"ABC-123\",\n  \"nationalIdNumber\": \"29901011234567\",\n  \"vehicleLicenceImage\": \"https://images.unsplash.com/photo-license.jpg\",\n  \"nationalIdImage\": \"https://images.unsplash.com/photo-id.jpg\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/DriverRegistration/driverregister",
               "host": ["{{baseUrl}}"],
               "path": ["api", "DriverRegistration", "driverregister"]
-            }
+            },
+            "description": "Registers a new delivery driver with vehicle and identity documents."
           }
         },
         {
-          "name": "Forgot Password",
+          "name": "Forgot Password (Send OTP)",
           "request": {
             "method": "POST",
             "header": [
@@ -241,17 +252,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"user@example.com\"\n}"
+              "raw": "{\n  \"email\": \"customer@flowery.com\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/Password/forgot-password",
               "host": ["{{baseUrl}}"],
               "path": ["api", "Password", "forgot-password"]
-            }
+            },
+            "description": "Initiates forgot password flow by generating and emailing a 6-digit OTP."
           }
         },
         {
-          "name": "Reset Password",
+          "name": "Reset Password (Verify OTP)",
           "request": {
             "method": "POST",
             "header": [
@@ -263,19 +275,20 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"123456\",\n  \"newPassword\": \"NewPassword123!\",\n  \"confirmPassword\": \"NewPassword123!\"\n}"
+              "raw": "{\n  \"email\": \"customer@flowery.com\",\n  \"otp\": \"123456\",\n  \"newPassword\": \"NewPassword123!\",\n  \"confirmPassword\": \"NewPassword123!\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/Password/reset-password",
               "host": ["{{baseUrl}}"],
               "path": ["api", "Password", "reset-password"]
-            }
+            },
+            "description": "Resets the user's password after verifying the received OTP code."
           }
         }
       ]
     },
     {
-      "name": "User Profile",
+      "name": "User Profile & Security",
       "item": [
         {
           "name": "Update Profile",
@@ -300,17 +313,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Updated\",\n  \"email\": \"user@example.com\",\n  \"phoneNumber\": \"+201000000000\"\n}"
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Updated\",\n  \"email\": \"customer@flowery.com\",\n  \"phoneNumber\": \"+201000000000\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/users/me",
               "host": ["{{baseUrl}}"],
               "path": ["users", "me"]
-            }
+            },
+            "description": "Updates authenticated user profile fields (firstName, lastName, email, phoneNumber)."
           }
         },
         {
-          "name": "Change Password",
+          "name": "Change Password (POST /users/me/change-password)",
           "request": {
             "auth": {
               "type": "bearer",
@@ -338,11 +352,12 @@
               "raw": "{{baseUrl}}/users/me/change-password",
               "host": ["{{baseUrl}}"],
               "path": ["users", "me", "change-password"]
-            }
+            },
+            "description": "Changes the password for the currently authenticated user."
           }
         },
         {
-          "name": "Update Password",
+          "name": "Update Password (PUT /users/me/password)",
           "request": {
             "auth": {
               "type": "bearer",
@@ -370,14 +385,28 @@
               "raw": "{{baseUrl}}/users/me/password",
               "host": ["{{baseUrl}}"],
               "path": ["users", "me", "password"]
-            }
+            },
+            "description": "Alternative PUT endpoint for updating password of authenticated user."
           }
         }
       ]
     },
     {
-      "name": "Catalog & Sections (Newly Pulled Endpoints)",
+      "name": "Catalog & Storefront (Server-Driven Home)",
       "item": [
+        {
+          "name": "Get Storefront Sections (Home)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "sections"]
+            },
+            "description": "Fetches enabled storefront sections (Banners, Category Rails, Occasion Rails, Product Rails) ordered by display order for the server-driven Home Screen."
+          }
+        },
         {
           "name": "Get All Categories",
           "request": {
@@ -387,7 +416,8 @@
               "raw": "{{baseUrl}}/catalog/categories",
               "host": ["{{baseUrl}}"],
               "path": ["catalog", "categories"]
-            }
+            },
+            "description": "Fetches all categories ordered by displayOrder (Fresh Bouquets, Luxury Arrangements, Plants, Roses, Orchids, etc.)."
           }
         },
         {
@@ -396,16 +426,30 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/catalog/categories/:categoryId/products",
+              "raw": "{{baseUrl}}/catalog/categories/:categoryId/products?pageNumber=1&pageSize=10",
               "host": ["{{baseUrl}}"],
               "path": ["catalog", "categories", ":categoryId", "products"],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
+                }
+              ],
               "variable": [
                 {
                   "key": "categoryId",
-                  "value": "1"
+                  "value": "1001",
+                  "description": "Category ID (e.g. 1001 for Fresh Bouquets)"
                 }
               ]
-            }
+            },
+            "description": "Returns paginated list of active products belonging to the specified category ID."
           }
         },
         {
@@ -414,20 +458,23 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/catalog/occasions?page=1&pageSize=10",
+              "raw": "{{baseUrl}}/catalog/occasions?pageNumber=1&pageSize=10",
               "host": ["{{baseUrl}}"],
               "path": ["catalog", "occasions"],
               "query": [
                 {
-                  "key": "page",
-                  "value": "1"
+                  "key": "pageNumber",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
                 },
                 {
                   "key": "pageSize",
-                  "value": "10"
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
                 }
               ]
-            }
+            },
+            "description": "Returns paginated list of occasions (Birthday, Anniversary, Wedding, Graduation, Mother's Day, Valentine's Day, etc.)."
           }
         },
         {
@@ -436,47 +483,61 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/catalog/occasions/:occasionId/products",
+              "raw": "{{baseUrl}}/catalog/occasions/:occasionId/products?pageNumber=1&pageSize=10",
               "host": ["{{baseUrl}}"],
               "path": ["catalog", "occasions", ":occasionId", "products"],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
+                }
+              ],
               "variable": [
                 {
                   "key": "occasionId",
-                  "value": "1"
+                  "value": "2001",
+                  "description": "Occasion ID (e.g. 2001 for Birthday, 2002 for Anniversary, etc.)"
                 }
               ]
-            }
+            },
+            "description": "Returns paginated list of products mapped to the specified occasion ID."
           }
         },
         {
-          "name": "Get All Sections (Home)",
+          "name": "Get All Products (with optional Category filter)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/catalog/sections",
-              "host": ["{{baseUrl}}"],
-              "path": ["catalog", "sections"]
-            }
-          }
-        },
-        {
-          "name": "Get All Products",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/catalog/products?categoryId=1",
+              "raw": "{{baseUrl}}/catalog/products?categoryId=1001&pageNumber=1&pageSize=10",
               "host": ["{{baseUrl}}"],
               "path": ["catalog", "products"],
               "query": [
                 {
                   "key": "categoryId",
+                  "value": "1001",
+                  "description": "Optional category filter ID",
+                  "disabled": false
+                },
+                {
+                  "key": "pageNumber",
                   "value": "1",
-                  "disabled": true
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
                 }
               ]
-            }
+            },
+            "description": "Returns paginated list of products with optional category filter."
           }
         }
       ]

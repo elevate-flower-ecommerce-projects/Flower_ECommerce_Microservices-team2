@@ -1,4 +1,4 @@
-﻿using AuthService.Common.BaseHandler;
+using AuthService.Common.BaseHandler;
 using AuthService.Common.Enums;
 using AuthService.Common.Helpers;
 using AuthService.Common.ResultPattern;
@@ -8,7 +8,7 @@ namespace AuthService.Features.Password.Commands.ResetPassword
 {
     /// <summary>
     /// Finds user by email, finds valid OTP, checks code + expiry, hashes new password, updates user.Password,
-    /// soft-deletes the OTP. Returns RequestResult<bool>.Success(true) or throws BusinessException.
+    /// soft-deletes the OTP. Returns RequestResult of bool (success) or throws BusinessException.
     /// </summary>
     public class ResetPasswordCommandHandler : BaseHandler<ResetPasswordCommand, RequestResult<bool>>
     {
