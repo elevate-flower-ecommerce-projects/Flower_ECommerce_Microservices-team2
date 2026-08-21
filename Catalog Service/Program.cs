@@ -29,6 +29,10 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.UseHttpsRedirection();
 
+// Global error handling middleware
+app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
+app.UseMiddleware<GlobalErrorHandlerMiddleware>();
+
 // Captures HttpContext.RequestAborted into the scoped CancellationTokenCapture.
 // Registered first so the token is available to everything below it.
 app.UseMiddleware<CancellationTokenCaptureMiddleware>();

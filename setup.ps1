@@ -1,7 +1,7 @@
-# setup.ps1 — Automated Full Microservices Backend Launcher for Flutter (Team 2)
 param (
     [string]$EnvVarName = "BASE_URL",
-    [switch]$Recreate
+    [switch]$Recreate,
+    [switch]$Build
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,7 +16,10 @@ if (-not (Test-Path $EnvFile)) {
     New-Item -Path $EnvFile -ItemType File | Out-Null
 }
 
-if ($Recreate) {
+if ($Build) {
+    Write-Host "[setup_backend] Building from local source code (--Build)..."
+    docker compose -f docker-compose.yml -f docker-compose.override.yml up -d --build
+} elseif ($Recreate) {
     Write-Host "[setup_backend] Pulling & Recreating containers (--Recreate)..."
     docker compose --env-file $EnvFile -f $ComposeFile pull
     docker compose --env-file $EnvFile -f $ComposeFile up -d --force-recreate

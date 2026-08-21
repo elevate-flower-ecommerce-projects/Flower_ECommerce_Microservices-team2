@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "flowery-team2-api-gateway-collection",
     "name": "Flowery E-Commerce API Gateway (Team 2 - Full & Updated Endpoints)",
-    "description": "Comprehensive Postman Collection for Flowery Team 2 Microservices architecture via API Gateway (Port 8080). Includes all Authentication, User Management, Catalog, Categories, Occasions, Storefront Sections, Products, and Health diagnostics endpoints.",
+    "description": "Comprehensive Postman Collection for Flowery Team 2 Microservices architecture via API Gateway (Port 8080). Includes all Authentication, User Management, Catalog Listing with dynamic discounts, Categories, Occasions, Storefront Sections, Products, and Health diagnostics endpoints.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -392,7 +392,7 @@
       ]
     },
     {
-      "name": "Catalog & Storefront (Server-Driven Home)",
+      "name": "Catalog & Storefront",
       "item": [
         {
           "name": "Get Storefront Sections (Home)",
@@ -510,7 +510,50 @@
           }
         },
         {
-          "name": "Get All Products (with optional Category filter)",
+          "name": "Get Product Catalog Listing (Filtered / Discounted)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog?categoryId=1001&occasionId=2001&pageNumber=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog"],
+              "query": [
+                {
+                  "key": "categoryId",
+                  "value": "1001",
+                  "description": "Optional Category filter ID",
+                  "disabled": false
+                },
+                {
+                  "key": "occasionId",
+                  "value": "2001",
+                  "description": "Optional Occasion filter ID",
+                  "disabled": false
+                },
+                {
+                  "key": "storeId",
+                  "value": "",
+                  "description": "Optional Store filter ID",
+                  "disabled": true
+                },
+                {
+                  "key": "pageNumber",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "description": "Items per page (default: 20)"
+                }
+              ]
+            },
+            "description": "Unified Catalog listing endpoint merged in PR #7. Computes dynamic discounted price at query time and supports filtering by category, occasion, and store."
+          }
+        },
+        {
+          "name": "Get All Products (Products Controller)",
           "request": {
             "method": "GET",
             "header": [],
@@ -537,7 +580,7 @@
                 }
               ]
             },
-            "description": "Returns paginated list of products with optional category filter."
+            "description": "Returns paginated list of products from ProductsController with optional category filter."
           }
         }
       ]
