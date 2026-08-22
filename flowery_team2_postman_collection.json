@@ -582,6 +582,19 @@
             },
             "description": "Returns paginated list of products from ProductsController with optional category filter."
           }
+        },
+        {
+          "name": "Seed / Re-seed Catalog Database",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/seed",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "seed"]
+            },
+            "description": "Triggers database seeding on demand for all 12 Categories, 16 Occasions, 62 Products, 125+ Images, 120+ Occasion Mappings, and 8 Storefront Sections."
+          }
         }
       ]
     }
