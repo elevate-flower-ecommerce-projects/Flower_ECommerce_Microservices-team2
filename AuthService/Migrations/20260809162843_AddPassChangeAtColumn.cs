@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -11,11 +11,15 @@ namespace AuthService.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<DateTime>(
-                name: "PasswordChangedAt",
-                table: "Users",
-                type: "datetime2",
-                nullable: true);
+            migrationBuilder.Sql(@"
+                IF NOT EXISTS (
+                    SELECT 1 FROM sys.columns 
+                    WHERE object_id = OBJECT_ID(N'[Users]') AND name = 'PasswordChangedAt'
+                )
+                BEGIN
+                    ALTER TABLE [Users] ADD [PasswordChangedAt] datetime2 NULL;
+                END
+            ");
 
             migrationBuilder.UpdateData(
                 table: "Roles",
@@ -70,9 +74,15 @@ namespace AuthService.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "PasswordChangedAt",
-                table: "Users");
+            migrationBuilder.Sql(@"
+                IF EXISTS (
+                    SELECT 1 FROM sys.columns 
+                    WHERE object_id = OBJECT_ID(N'[Users]') AND name = 'PasswordChangedAt'
+                )
+                BEGIN
+                    ALTER TABLE [Users] DROP COLUMN [PasswordChangedAt];
+                END
+            ");
 
             migrationBuilder.UpdateData(
                 table: "Roles",
