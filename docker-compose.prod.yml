@@ -60,9 +60,6 @@ services:
 
   apigateway:
     image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-apigateway-team2:latest
-    build:
-      context: .
-      dockerfile: API Gateway/Dockerfile
     container_name: flower_apigateway_team2
     restart: unless-stopped
     depends_on:
@@ -88,9 +85,6 @@ services:
 
   authservice:
     image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-identity-service-team2:latest
-    build:
-      context: .
-      dockerfile: AuthService/Dockerfile
     container_name: flower_identity_service_team2
     restart: unless-stopped
     depends_on:
@@ -119,9 +113,6 @@ services:
 
   catalogservice:
     image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-catalog-service-team2:latest
-    build:
-      context: .
-      dockerfile: Catalog Service/Dockerfile
     container_name: flower_catalog_service_team2
     restart: unless-stopped
     depends_on:
@@ -139,9 +130,6 @@ services:
 
   cartservice:
     image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-cart-service-team2:latest
-    build:
-      context: .
-      dockerfile: Cart ServiceCart Service/Dockerfile
     container_name: flower_cart_service_team2
     restart: unless-stopped
     environment:
@@ -154,9 +142,6 @@ services:
 
   orderfulfillmentservice:
     image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-order-service-team2:latest
-    build:
-      context: .
-      dockerfile: Order & Fulfillment Service/Dockerfile
     container_name: flower_order_service_team2
     restart: unless-stopped
     environment:
@@ -169,9 +154,6 @@ services:
 
   paymentservice:
     image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-payment-service-team2:latest
-    build:
-      context: .
-      dockerfile: Payment Service/Dockerfile
     container_name: flower_payment_service_team2
     restart: unless-stopped
     environment:
@@ -184,9 +166,6 @@ services:
 
   addressstorecoverageservice:
     image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-address-service-team2:latest
-    build:
-      context: .
-      dockerfile: Address & Store Coverage Service/Dockerfile
     container_name: flower_address_service_team2
     restart: unless-stopped
     environment:

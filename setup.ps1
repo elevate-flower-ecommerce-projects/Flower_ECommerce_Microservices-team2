@@ -16,14 +16,12 @@ if (-not (Test-Path $EnvFile)) {
     New-Item -Path $EnvFile -ItemType File | Out-Null
 }
 
-if ($Build) {
-    Write-Host "[setup_backend] Building from local source code (--Build)..."
-    docker compose -f docker-compose.yml -f docker-compose.override.yml up -d --build
-} elseif ($Recreate) {
+if ($Recreate) {
     Write-Host "[setup_backend] Pulling & Recreating containers (--Recreate)..."
     docker compose --env-file $EnvFile -f $ComposeFile pull
     docker compose --env-file $EnvFile -f $ComposeFile up -d --force-recreate
 } else {
+    docker compose --env-file $EnvFile -f $ComposeFile pull
     docker compose --env-file $EnvFile -f $ComposeFile up -d
 }
 
