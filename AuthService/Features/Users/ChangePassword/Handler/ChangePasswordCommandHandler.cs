@@ -6,6 +6,7 @@ using AuthService.Common.ResultPattern;
 using AuthService.Common.Services;
 using Microsoft.EntityFrameworkCore;
 
+namespace AuthService.Features.Users.ChangePassword;
 
 public sealed class ChangePasswordCommandHandler(
     BaseParameters baseParameters,

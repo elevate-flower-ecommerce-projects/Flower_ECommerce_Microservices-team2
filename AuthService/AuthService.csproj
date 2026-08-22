@@ -11,12 +11,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\**" />
     <Compile Remove="Features\Common\PersonType\**" />
     <Compile Remove="Features\CustomerRegistration\QueryHandler\**" />
+    <Content Remove="Controllers\**" />
     <Content Remove="Features\Common\PersonType\**" />
     <Content Remove="Features\CustomerRegistration\QueryHandler\**" />
+    <EmbeddedResource Remove="Controllers\**" />
     <EmbeddedResource Remove="Features\Common\PersonType\**" />
     <EmbeddedResource Remove="Features\CustomerRegistration\QueryHandler\**" />
+    <None Remove="Controllers\**" />
     <None Remove="Features\Common\PersonType\**" />
     <None Remove="Features\CustomerRegistration\QueryHandler\**" />
   </ItemGroup>
@@ -53,7 +57,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
 
     <!-- OpenAPI / Swagger -->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 
     <!-- Azure Key Vault (Production Secrets Management) -->
@@ -72,7 +75,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

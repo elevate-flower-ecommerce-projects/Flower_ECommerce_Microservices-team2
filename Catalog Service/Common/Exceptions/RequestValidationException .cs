@@ -1,0 +1,9 @@
+namespace Catalog_Service.Common.Exceptions
+{
+    public class RequestValidationException : Exception
+    {
+        public RequestValidationException(string message) : base(message)
+        {
+        }
+    }
+}

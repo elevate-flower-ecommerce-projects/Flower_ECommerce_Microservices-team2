@@ -1,41 +1,62 @@
 services:
 
-  # ── API Gateway (dev overrides) ───────────────────────────────────────────
   apigateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
     ports:
-      - "8080"
-      - "8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - "5086:8080"
 
-  # ── Auth Service (dev overrides) ─────────────────────────────────────────
   authservice:
     environment:
-      # Tell ASP.NET Core which environment config to load (appsettings.Docker.json)
-      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      # Override the connection string at runtime using the SA_PASSWORD from .env
-      - ConnectionStrings__AuthDb=Server=sqlserver,1433;Database=AuthDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
-      - IdGen__MachineId=${IDGEN_MACHINE_ID:-0}
-      # ── JWT secrets injected from .env — never hardcode in appsettings ────────
-      - Jwt__Key=${JWT_KEY}
-      - Jwt__Issuer=${JWT_ISSUER}
-      - Jwt__Audience=${JWT_AUDIENCE}
+      - ConnectionStrings__AuthDb=Server=sqlserver,1433;Database=AuthDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - Jwt__Key=${JWT_SECRET:-YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS}
+      - Jwt__Issuer=${JWT_ISSUER:-FlowersAuth}
+      - Jwt__Audience=${JWT_AUDIENCE:-FlowersApp}
     ports:
-      - "5000:8080"    # HTTP  → localhost:5000
-      - "5001:8081"    # HTTPS → localhost:5001
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - "5022:8080"
 
-  # ── SQL Server (dev overrides) ────────────────────────────────────────────
+  catalogservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__CatalogServiceDb=Server=sqlserver,1433;Database=CatalogServiceDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - Jwt__Key=${JWT_SECRET:-YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS}
+      - Jwt__Issuer=${JWT_ISSUER:-FlowersAuth}
+      - Jwt__Audience=${JWT_AUDIENCE:-FlowersApp}
+    ports:
+      - "5129:8080"
+
+  cartservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "5292:8080"
+
+  orderservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "5109:8080"
+
+  paymentservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "5260:8080"
+
+  addressservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "5272:8080"
+
   sqlserver:
     ports:
-      - "1433:1433"    # Expose for SSMS / Azure Data Studio on host machine
+      - "1433:1433"
