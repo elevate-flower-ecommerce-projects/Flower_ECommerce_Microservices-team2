@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Features.DriverRegistration.Command.Handler
 {
-    public class DriverRegistrationHandler : BaseHandler<DriverRegistrationCommand, RequestResult<bool>>
+    public class DriverRegistrationorchestrator : BaseHandler<DriverRegistrationCommand, RequestResult<bool>>
     {
-        public DriverRegistrationHandler(BaseParameters baseParameters) : base(baseParameters)
+        public DriverRegistrationorchestrator(BaseParameters baseParameters) : base(baseParameters)
         {
         }
 

@@ -17,11 +17,12 @@ public sealed class ProductsController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(EndpointResponse<PagedResult<ProductSummaryDto>>), StatusCodes.Status410Gone)]
     public async Task<ActionResult<EndpointResponse<PagedResult<ProductSummaryDto>>>> GetProducts(
         [FromQuery] long? categoryId,
+        [FromQuery] long? occasionId,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send(new GetProductsQuery(categoryId, pageNumber, pageSize), cancellationToken);
+        var result = await mediator.Send(new GetProductsQuery(categoryId, occasionId, pageNumber, pageSize), cancellationToken);
 
         if (result.IsSuccess)
         {

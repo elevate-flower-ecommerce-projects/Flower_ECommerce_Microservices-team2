@@ -11,20 +11,18 @@ namespace Catalog_Service.Features.Occasions;
 public sealed class OccasionsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(typeof(EndpointResponse<PagedResult<OccasionDto>>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<EndpointResponse<PagedResult<OccasionDto>>>> GetOccasions(
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10,
+    [ProducesResponseType(typeof(EndpointResponse<IEnumerable<OccasionDto>>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<EndpointResponse<IEnumerable<OccasionDto>>>> GetOccasions(
         CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send(new GetAllOccasionsQuery(pageNumber, pageSize), cancellationToken);
+        var result = await mediator.Send(new GetAllOccasionsQuery(), cancellationToken);
 
         if (result.IsSuccess)
         {
-            return Ok(EndpointResponse<PagedResult<OccasionDto>>.Success(result.Data, result.Message));
+            return Ok(EndpointResponse<IEnumerable<OccasionDto>>.Success(result.Data, result.Message));
         }
 
-        return BadRequest(EndpointResponse<PagedResult<OccasionDto>>.Failure(result.ErrorCode, result.Message));
+        return BadRequest(EndpointResponse<IEnumerable<OccasionDto>>.Failure(result.ErrorCode, result.Message));
     }
 
     [HttpGet("{occasionId:long}/products")]
