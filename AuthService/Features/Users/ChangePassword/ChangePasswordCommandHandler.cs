@@ -44,10 +44,10 @@ public sealed class ChangePasswordCommandHandler(
             .Where(token => token.UserId == userId)
             .ExecuteUpdateAsync(update => update.SetProperty(token => token.IsDeleted, true), cancellationToken);
 
-        await publisher.PublishAsync(
-            "auth.password-changed",
-            new PasswordChangedEvent(user.Id, user.Email, "Your password was changed"),
-            cancellationToken: cancellationToken);
+        //await publisher.PublishAsync(
+        //    "auth.password-changed",
+        //    new PasswordChangedEvent(user.Id, user.Email, "Your password was changed"),
+        //    cancellationToken: cancellationToken);
 
         return RequestResult<bool>.Success(true, "Password changed successfully.");
     }

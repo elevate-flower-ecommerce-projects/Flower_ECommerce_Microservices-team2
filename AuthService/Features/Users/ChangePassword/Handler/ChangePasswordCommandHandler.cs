@@ -49,12 +49,12 @@ public sealed class ChangePasswordCommandHandler(
                 updates => updates.SetProperty(token => token.IsDeleted, true),
                 cancellationToken);
 
-        await emailService.SendAsync(
-            user.Email,
-            user.FullName,
-            "Your password was changed",
-            $"<p>Hi <strong>{user.FullName}</strong>,</p><p>Your password was changed successfully. If you did not make this change, please contact support immediately.</p>",
-            cancellationToken);
+        //await emailService.SendAsync(
+        //    user.Email,
+        //    user.FullName,
+        //    "Your password was changed",
+        //    $"<p>Hi <strong>{user.FullName}</strong>,</p><p>Your password was changed successfully. If you did not make this change, please contact support immediately.</p>",
+        //    cancellationToken);
 
         return RequestResult<bool>.Success(true, "Password changed successfully. Please sign in again.");
     }

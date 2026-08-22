@@ -59,14 +59,14 @@ namespace AuthService.Features.UserManagement.LoginFeature.LoginEndPoint
 
             return EndpointResponse<string>.Success(requestResult.Data, "Token reactivated successfully.");
         }       
-        [HttpPost("t")]
+        //[HttpPost("t")]
 
-        [Authorize]
-        public async Task<EndpointResponse<string>> t([FromBody] long userId, CancellationToken ct)
-        {
+        //[Authorize]
+        //public async Task<EndpointResponse<string>> t([FromBody] long userId, CancellationToken ct)
+        //{
 
             
-            return EndpointResponse<string>.Success("", "Token reactivated successfully.");
-        }
+        //    return EndpointResponse<string>.Success("", "Token reactivated successfully.");
+        //}
     }
 }
