@@ -33,6 +33,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__CartDb=Server=sqlserver,1433;Database=CartDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - Jwt__Key=${JWT_SECRET:-YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS}
+      - Jwt__Issuer=${JWT_ISSUER:-FlowersAuth}
+      - Jwt__Audience=${JWT_AUDIENCE:-FlowersApp}
     ports:
       - "5292:8080"
 
@@ -54,6 +58,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__AddressStoreCoverageDb=Server=sqlserver,1433;Database=AddressStoreCoverageDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - Jwt__Key=${JWT_SECRET:-YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS}
+      - Jwt__Issuer=${JWT_ISSUER:-FlowersAuth}
+      - Jwt__Audience=${JWT_AUDIENCE:-FlowersApp}
     ports:
       - "5272:8080"
 
