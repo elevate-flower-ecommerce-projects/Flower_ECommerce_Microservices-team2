@@ -29,7 +29,10 @@ public sealed class GetProductsQueryHandler(BaseRequestParameters baseParameters
                 product.Category.Name),
             request.PageNumber,
             request.PageSize,
-            predicate: p => !p.IsArchived && (request.CategoryId == null || p.CategoryId == request.CategoryId),
+            predicate: p =>
+                !p.IsArchived
+                && (request.CategoryId == null || p.CategoryId == request.CategoryId)
+                && (request.OccasionId == null || p.ProductOccasions.Any(po => po.OccasionId == request.OccasionId)),
             cancellationToken: cancellationToken);
 
         return RequestResult<PagedResult<ProductSummaryDto>>.Success(pagedResult);

@@ -4,7 +4,5 @@ using MediatR;
 
 namespace Catalog_Service.Features.Occasions.Query;
 
-public sealed record GetAllOccasionsQuery(
-    int PageNumber = 1,
-    int PageSize = 10
-) : IRequest<RequestResult<PagedResult<OccasionDto>>>;
+public sealed record GetAllOccasionsQuery()
+    : IRequest<RequestResult<IEnumerable<OccasionDto>>>;
