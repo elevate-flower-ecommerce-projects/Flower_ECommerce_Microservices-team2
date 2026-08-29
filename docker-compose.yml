@@ -29,6 +29,9 @@ services:
     build:
       context: .
       dockerfile: Cart ServiceCart Service/Dockerfile
+    depends_on:
+      sqlserver:
+        condition: service_healthy
 
   orderservice:
     image: ${DOCKER_REGISTRY-}orderservice
@@ -47,6 +50,9 @@ services:
     build:
       context: .
       dockerfile: Address & Store Coverage Service/Dockerfile
+    depends_on:
+      sqlserver:
+        condition: service_healthy
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
