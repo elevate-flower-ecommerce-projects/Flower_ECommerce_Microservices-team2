@@ -1,7 +1,7 @@
 using Cart_ServiceCart_Service.Common.BaseHandler;
 using Cart_ServiceCart_Service.Common.ResultPattern;
 
-namespace Cart_ServiceCart_Service.Features.Cart.UpdateItemQuantity.NewFolder1;
+namespace Cart_ServiceCart_Service.Features.Cart.UpdateItemQuantity;
 
 public sealed class UpdateItemQuantityOrchestratorHandler(BaseParameters baseParameters)
     : BaseHandler<UpdateItemQuantityOrchestrator, RequestResult<CartSummaryResponse>>(baseParameters)

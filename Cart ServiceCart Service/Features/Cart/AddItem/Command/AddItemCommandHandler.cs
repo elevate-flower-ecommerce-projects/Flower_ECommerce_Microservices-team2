@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 using CartEntity = Cart_ServiceCart_Service.Entities.Cart;
 
-namespace Cart_ServiceCart_Service.Features.Cart.AddItem.NewFolder;
+namespace Cart_ServiceCart_Service.Features.Cart.AddItem;
 
 public sealed class AddItemCommandHandler(BaseParameters baseParameters)
     : BaseHandler<AddItemCommand, RequestResult<CartSummaryResponse>>(baseParameters)

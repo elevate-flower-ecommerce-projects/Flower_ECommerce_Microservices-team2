@@ -1,3 +1,4 @@
+using Cart_ServiceCart_Service.Common.BaseHandler;
 using Cart_ServiceCart_Service.Configurations.DependencyInjection;
 using Cart_ServiceCart_Service.Features.Cart;
 using Cart_ServiceCart_Service.Features.Cart.AddItem;
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Infrastructure
 builder.Services.AddDBContext(builder.Configuration);
+builder.Services.AddScoped<BaseParameters>();
 builder.Services.AddAuthenticationConfiguration(builder.Configuration);
 builder.Services.AddMediatRConfiguration();
 builder.Services.AddControllers();

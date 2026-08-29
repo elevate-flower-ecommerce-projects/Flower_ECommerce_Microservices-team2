@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 using CartEntity = Cart_ServiceCart_Service.Entities.Cart;
 
-namespace Cart_ServiceCart_Service.Features.Cart.UpdateItemQuantity.NewFolder;
+namespace Cart_ServiceCart_Service.Features.Cart.UpdateItemQuantity;
 
 public sealed class UpdateItemQuantityCommandHandler(BaseParameters baseParameters)
     : BaseHandler<UpdateItemQuantityCommand, RequestResult<CartSummaryResponse>>(baseParameters)

@@ -1,7 +1,7 @@
 using Cart_ServiceCart_Service.Common.BaseHandler;
 using Cart_ServiceCart_Service.Common.ResultPattern;
 
-namespace Cart_ServiceCart_Service.Features.Cart.AddItem.NewFolder1;
+namespace Cart_ServiceCart_Service.Features.Cart.AddItem;
 
 public sealed class AddItemOrchestratorHandler(BaseParameters baseParameters)
     : BaseHandler<AddItemOrchestrator, RequestResult<CartSummaryResponse>>(baseParameters)
