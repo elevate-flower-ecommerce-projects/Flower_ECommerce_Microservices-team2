@@ -58,6 +58,9 @@ namespace AuthService.Common.Enums
         [Description("New password must be different from the current password.")]
         PasswordReuse = 507,
 
+        [Description("Account is blocked.")]
+        AccountBlocked = 508,
+
         [Description("User not found.")]
         UserNotFound = 1008,
 

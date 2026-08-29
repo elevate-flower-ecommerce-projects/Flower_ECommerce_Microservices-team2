@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace AuthService.Features.Password.Commands.ResetPassword
 {
@@ -14,9 +14,8 @@ namespace AuthService.Features.Password.Commands.ResetPassword
                 .NotEmpty().WithMessage("Email is required.")
                 .EmailAddress().WithMessage("A valid email address is required.");
 
-            RuleFor(x => x.OtpCode)
-                .NotEmpty().WithMessage("OTP code is required.")
-                .Length(6).WithMessage("OTP code must be exactly 6 characters.");
+            RuleFor(x => x.ResetCode)
+                .NotEmpty().WithMessage("Reset code is required.");
 
             RuleFor(x => x.NewPassword)
                 .NotEmpty().WithMessage("New password is required.")

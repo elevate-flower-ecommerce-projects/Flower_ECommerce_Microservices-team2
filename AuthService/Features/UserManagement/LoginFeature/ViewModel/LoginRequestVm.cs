@@ -6,6 +6,8 @@ namespace AuthService.Features.UserManagement.LoginFeature.ViewModel
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public string? FcmToken { get; set; }
+        public string? DeviceId { get; set; }
     }
 
     public class LoginRequestVmValidator : AbstractValidator<LoginRequestVm>

@@ -27,7 +27,19 @@ ENV_VAR_NAME="${POSITIONAL[0]:-BASE_URL}"
 
 if [[ ! -f "$ENV_FILE" ]]; then
   log "Creating default .env at $ENV_FILE"
-  touch "$ENV_FILE"
+  cat << 'EOF' > "$ENV_FILE"
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_SENDER=testamr124@gmail.com
+EMAIL_SENDER_NAME=FlowerBackend
+EMAIL_PASSWORD=exlu nsgy vvsf nhup
+EOF
+else
+  grep -q "^EMAIL_SENDER=" "$ENV_FILE" || echo "EMAIL_SENDER=testamr124@gmail.com" >> "$ENV_FILE"
+  grep -q "^EMAIL_PASSWORD=" "$ENV_FILE" || echo "EMAIL_PASSWORD=exlu nsgy vvsf nhup" >> "$ENV_FILE"
+  grep -q "^EMAIL_HOST=" "$ENV_FILE" || echo "EMAIL_HOST=smtp.gmail.com" >> "$ENV_FILE"
+  grep -q "^EMAIL_PORT=" "$ENV_FILE" || echo "EMAIL_PORT=587" >> "$ENV_FILE"
+  grep -q "^EMAIL_SENDER_NAME=" "$ENV_FILE" || echo "EMAIL_SENDER_NAME=FlowerBackend" >> "$ENV_FILE"
 fi
 
 if $RECREATE; then

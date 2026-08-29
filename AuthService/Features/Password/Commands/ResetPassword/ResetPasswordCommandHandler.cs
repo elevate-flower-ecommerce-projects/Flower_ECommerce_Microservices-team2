@@ -31,7 +31,7 @@ namespace AuthService.Features.Password.Commands.ResetPassword
             var otp = await _context.OtpVerificationCodes
                 .AsTracking()
                 .FirstOrDefaultAsync(o => o.UserId == user.Id
-                                          && o.GeneratedCode == request.OtpCode
+                                          && o.GeneratedCode == request.ResetCode
                                           && o.ExpireDate > DateTime.UtcNow
                                           && !o.IsDeleted, cancellationToken);
             if (otp is null)

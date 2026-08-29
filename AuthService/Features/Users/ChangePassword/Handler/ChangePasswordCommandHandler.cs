@@ -24,13 +24,9 @@ public sealed class ChangePasswordCommandHandler(
         if (user is null)
             return RequestResult<bool>.Failure(ErrorCode.UserNotFound, "User not found.");
 
-        // Verify this first so an invalid current password never reveals new-password details.
         if (string.IsNullOrEmpty(request.CurrentPassword) ||
             !PasswordHasher.Verify(request.CurrentPassword, user.Password))
             return RequestResult<bool>.Failure(ErrorCode.InvalidCurrentPassword, "Current password is incorrect.");
-
-        if (request.NewPassword != request.ConfirmNewPassword)
-            return RequestResult<bool>.Failure(ErrorCode.PasswordMismatch, "New password and confirmation do not match.");
 
         if (!IsComplexPassword(request.NewPassword))
             return RequestResult<bool>.Failure(
@@ -50,12 +46,12 @@ public sealed class ChangePasswordCommandHandler(
                 updates => updates.SetProperty(token => token.IsDeleted, true),
                 cancellationToken);
 
-        //await emailService.SendAsync(
-        //    user.Email,
-        //    user.FullName,
-        //    "Your password was changed",
-        //    $"<p>Hi <strong>{user.FullName}</strong>,</p><p>Your password was changed successfully. If you did not make this change, please contact support immediately.</p>",
-        //    cancellationToken);
+        await emailService.SendAsync(
+            user.Email,
+            user.FullName,
+            "Your password was changed",
+            $"<p>Hi <strong>{user.FullName}</strong>,</p><p>Your password was changed successfully. If you did not make this change, please contact support immediately.</p>",
+            cancellationToken);
 
         return RequestResult<bool>.Success(true, "Password changed successfully. Please sign in again.");
     }

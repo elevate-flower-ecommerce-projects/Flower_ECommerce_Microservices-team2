@@ -7,5 +7,10 @@ namespace AuthService.Features.Users.UpdateProfile;
 
 
 
+public sealed record UpdateProfileDocument(
+    string DocumentUrl,
+    string DocumentType,
+    long DocumentSize);
+
 public sealed record UpdateProfileDocumentCommand(
     UpdateProfileDocument Document) : ICommand<RequestResult<UserDocumentResponse>>;

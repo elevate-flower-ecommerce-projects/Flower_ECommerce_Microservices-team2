@@ -12,9 +12,9 @@ namespace AuthService.Configurations.DependencyInjection
             {
                 opt.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "AuthService API",
+                    Title = "Elevate Flower E-Commerce - AuthService API (Team 2)",
                     Version = "v1",
-                    Description = "Authentication and User Management Microservice"
+                    Description = "OpenAPI 3.0.3 specification for AuthService, matching C# controller endpoints with enhanced Login response models and implementation status indicators."
                 });
 
                 opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
