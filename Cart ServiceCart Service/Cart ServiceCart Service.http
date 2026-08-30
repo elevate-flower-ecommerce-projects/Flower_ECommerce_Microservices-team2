@@ -1,6 +1,25 @@
 @Cart_ServiceCart_Service_HostAddress = http://localhost:5079
+@accessToken = paste-a-valid-jwt-here
 
-GET {{Cart_ServiceCart_Service_HostAddress}}/weatherforecast/
+POST {{Cart_ServiceCart_Service_HostAddress}}/cart/items
 Accept: application/json
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "productId": 3001,
+  "quantity": 2
+}
+
+###
+
+PATCH {{Cart_ServiceCart_Service_HostAddress}}/cart/items/replace-with-cart-item-id
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
 
 ###

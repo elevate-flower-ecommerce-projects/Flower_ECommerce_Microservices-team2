@@ -1,4 +1,5 @@
 using Cart_ServiceCart_Service.Common.Behaviors;
+
 namespace Cart_ServiceCart_Service.Configurations.DependencyInjection;
 
 public static class MediatRConfiguration
