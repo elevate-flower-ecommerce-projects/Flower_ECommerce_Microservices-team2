@@ -1,5 +1,6 @@
 using Cart_ServiceCart_Service.Common.Enums;
 using Cart_ServiceCart_Service.Common.Helpers;
+
 namespace Cart_ServiceCart_Service.Common.ResultPattern;
 
 public record EndpointResponse<T>(T Data, bool IsSuccess, string Message, ErrorCode ErrorCode)
@@ -8,9 +9,10 @@ public record EndpointResponse<T>(T Data, bool IsSuccess, string Message, ErrorC
     {
         return new EndpointResponse<T>(data, true, message, ErrorCode.None);
     }
+
     public static EndpointResponse<T> Failure(ErrorCode errorCode, string message = null)
     {
-        if (message is null)
+        if (string.IsNullOrWhiteSpace(message))
         {
             message = errorCode.GetDescription();
         }

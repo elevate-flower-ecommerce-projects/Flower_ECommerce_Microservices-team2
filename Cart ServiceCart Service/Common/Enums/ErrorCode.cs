@@ -63,6 +63,18 @@ public enum ErrorCode
     [Description("User not found.")]
     UserNotFound = 1008,
 
+    [Description("Resource not found.")]
+    NotFound = 404,
+
+    [Description("Conflict.")]
+    Conflict = 409,
+
+    [Description("Service unavailable.")]
+    ServiceUnavailable = 503,
+
+    [Description("Internal error.")]
+    InternalError = 500,
+
     [Description("An unknown error occurred.")]
     UnKnown = 500
 }
