@@ -215,11 +215,11 @@
               "raw": "{\n  \"fullName\": \"Mariam Ahmed\",\n  \"email\": \"mariam@example.com\",\n  \"phoneNumber\": \"01001112222\",\n  \"gender\": 1,\n  \"password\": \"Password123!\",\n  \"confirmPassword\": \"Password123!\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/CustomerRegistration/CustomerRegistration/register",
+              "raw": "{{baseUrl}}/api/CustomerRegistration/register",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "CustomerRegistration", "CustomerRegistration", "register"]
+              "path": ["api", "CustomerRegistration", "register"]
             },
-            "description": "Registers a new customer account matching OpenAPI 3.0.3 contract specification."
+            "description": "Registers a new customer account."
           }
         },
         {
