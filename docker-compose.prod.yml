@@ -137,9 +137,25 @@ services:
     image: ${DOCKER_USERNAME:-soloprogrammer88}/flower-cart-service-team2:latest
     container_name: flower_cart_service_team2
     restart: unless-stopped
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      catalogservice:
+        condition: service_started
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
+      ConnectionStrings__CartDb: "Server=sqlserver,1433;Database=CartDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=CartDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};TrustServerCertificate=True;MultipleActiveResultSets=true;"
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Username: ${RABBITMQ_USER:-guest}
+      RabbitMQ__Password: ${RABBITMQ_PASS:-guest}
+      CatalogService__BaseUrl: "http://catalogservice:8080/"
+      Jwt__Key: ${JWT_SECRET:-YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS}
+      Jwt__Issuer: ${JWT_ISSUER:-FlowersAuth}
+      Jwt__Audience: ${JWT_AUDIENCE:-FlowersApp}
     ports:
       - "5292:8080"
     networks:
