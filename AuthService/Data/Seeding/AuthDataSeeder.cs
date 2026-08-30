@@ -19,6 +19,34 @@ public static class AuthDataSeeder
             try
             {
                 logger.LogInformation("Attempting to apply AuthDb database migrations (Attempt {Attempt}/{MaxRetries})...", i + 1, maxRetries);
+                
+                // If tables like 'Roles' already exist in the database from prior setup, ensure EF Migrations History is synchronized so MigrateAsync doesn't try to recreate existing tables.
+                try
+                {
+                    await context.Database.ExecuteSqlRawAsync(@"
+                        IF OBJECT_ID(N'[Roles]', N'U') IS NOT NULL
+                        BEGIN
+                            IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+                            BEGIN
+                                CREATE TABLE [__EFMigrationsHistory] (
+                                    [MigrationId] nvarchar(150) NOT NULL,
+                                    [ProductVersion] nvarchar(32) NOT NULL,
+                                    CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+                                );
+                            END;
+                            IF NOT EXISTS (SELECT 1 FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20260828154048_Create AuthDatabase')
+                            BEGIN
+                                INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+                                VALUES ('20260828154048_Create AuthDatabase', '10.0.11');
+                            END;
+                        END;
+                    ");
+                }
+                catch
+                {
+                    // Ignore if database does not exist yet or connection is still warming up
+                }
+
                 await context.Database.MigrateAsync();
                 logger.LogInformation("AuthDb database migration completed successfully.");
                 break;
