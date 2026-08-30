@@ -28,6 +28,7 @@ app.UseSwaggerUI(c =>
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 // Global error handling middleware
 app.UseMiddleware<ValidationExceptionHandlingMiddleware>();

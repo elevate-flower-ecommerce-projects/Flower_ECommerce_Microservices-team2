@@ -51,28 +51,34 @@ public static class CatalogDataSeeder
         {
             var categoriesToSeed = new List<Category>
             {
-                new Category { Id = 1001, Name = "Fresh Bouquets", ImageUrl = "https://images.unsplash.com/photo-1561181286-d3fee7d55364", DisplayOrder = 1, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1002, Name = "Luxury Flower Arrangements", ImageUrl = "https://images.unsplash.com/photo-1526047932273-341f2a7631f9", DisplayOrder = 2, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1003, Name = "Indoor & House Plants", ImageUrl = "https://images.unsplash.com/photo-1485955900006-10f4d324d411", DisplayOrder = 3, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1004, Name = "Velvet & Premium Roses", ImageUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23", DisplayOrder = 4, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1005, Name = "Orchids & Exotic Blooms", ImageUrl = "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d", DisplayOrder = 5, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1006, Name = "Dried & Preserved Florals", ImageUrl = "https://images.unsplash.com/photo-1508610048659-a06b669e3321", DisplayOrder = 6, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1007, Name = "Flower Baskets & Gift Boxes", ImageUrl = "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11", DisplayOrder = 7, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1008, Name = "Floral Accessories & Vases", ImageUrl = "https://images.unsplash.com/photo-1612196808214-b7e239e5f6b7", DisplayOrder = 8, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1009, Name = "Bridal & Wedding Collection", ImageUrl = "https://images.unsplash.com/photo-1519741497674-611481863552", DisplayOrder = 9, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1010, Name = "Single Stems & Bunches", ImageUrl = "https://images.unsplash.com/photo-1533616688419-b7a585564566", DisplayOrder = 10, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1011, Name = "Bonsai & Zen Garden", ImageUrl = "https://images.unsplash.com/photo-1512428813834-c702c7702b78", DisplayOrder = 11, IsDeleted = false, CreatedAt = now },
-                new Category { Id = 1012, Name = "Chocolates, Cakes & Add-ons", ImageUrl = "https://images.unsplash.com/photo-1549465220-1a8b9238cd48", DisplayOrder = 12, IsDeleted = false, CreatedAt = now }
+                new Category { Id = 1001, Name = "Fresh Bouquets", ImageUrl = "categories/bouquets.png", DisplayOrder = 1, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1002, Name = "Luxury Flower Arrangements", ImageUrl = "categories/roses.png", DisplayOrder = 2, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1003, Name = "Indoor & House Plants", ImageUrl = "categories/tulip_flower.png", DisplayOrder = 3, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1004, Name = "Velvet & Premium Roses", ImageUrl = "categories/roses.png", DisplayOrder = 4, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1005, Name = "Orchids & Exotic Blooms", ImageUrl = "categories/tulip_flower.png", DisplayOrder = 5, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1006, Name = "Dried & Preserved Florals", ImageUrl = "categories/tulips.png", DisplayOrder = 6, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1007, Name = "Flower Baskets & Gift Boxes", ImageUrl = "categories/gift.png", DisplayOrder = 7, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1008, Name = "Floral Accessories & Vases", ImageUrl = "categories/diamond.png", DisplayOrder = 8, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1009, Name = "Bridal & Wedding Collection", ImageUrl = "categories/bouquets.png", DisplayOrder = 9, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1010, Name = "Single Stems & Bunches", ImageUrl = "categories/roses.png", DisplayOrder = 10, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1011, Name = "Bonsai & Zen Garden", ImageUrl = "categories/tulips.png", DisplayOrder = 11, IsDeleted = false, CreatedAt = now },
+                new Category { Id = 1012, Name = "Chocolates, Cakes & Add-ons", ImageUrl = "categories/card.png", DisplayOrder = 12, IsDeleted = false, CreatedAt = now }
             };
 
             var existingCategories = await context.Categories.IgnoreQueryFilters().ToListAsync();
             var existingIds = existingCategories.Select(c => c.Id).ToHashSet();
             var existingNames = existingCategories.Select(c => c.Name).ToHashSet();
 
-            // Un-delete any existing seeded categories
-            foreach (var cat in existingCategories.Where(c => c.IsDeleted))
+            // Update existing categories and un-delete
+            foreach (var cat in categoriesToSeed)
             {
-                cat.IsDeleted = false;
+                var existing = existingCategories.FirstOrDefault(c => c.Id == cat.Id || c.Name == cat.Name);
+                if (existing != null)
+                {
+                    existing.ImageUrl = cat.ImageUrl;
+                    existing.DisplayOrder = cat.DisplayOrder;
+                    existing.IsDeleted = false;
+                }
             }
 
             var newCategories = categoriesToSeed

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AuthService.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class CreateAuthDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,6 +60,7 @@ namespace AuthService.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
+                    PasswordChangedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsEmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     IsBlocked = table.Column<bool>(type: "bit", nullable: false),
                     BlockedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -239,9 +240,9 @@ namespace AuthService.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "IsDeleted", "Name", "PersonType", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(3754), null, false, "Customer", "Customer", null, null },
-                    { 2L, new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(4581), null, false, "Driver", "Driver", null, null },
-                    { 3L, new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(4583), null, false, "Admin", "Admin", null, null }
+                    { 1L, new DateTime(2026, 8, 28, 15, 40, 47, 280, DateTimeKind.Utc).AddTicks(4303), null, false, "Customer", "Customer", null, null },
+                    { 2L, new DateTime(2026, 8, 28, 15, 40, 47, 280, DateTimeKind.Utc).AddTicks(5624), null, false, "Driver", "Driver", null, null },
+                    { 3L, new DateTime(2026, 8, 28, 15, 40, 47, 280, DateTimeKind.Utc).AddTicks(5626), null, false, "Admin", "Admin", null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -249,10 +250,10 @@ namespace AuthService.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Description", "IsDeleted", "Name", "StatusType", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(7448), null, "Application submitted and awaiting review.", false, "Pending", 0, null, null },
-                    { 2L, new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8072), null, "Driver application approved and active.", false, "Approved", 0, null, null },
-                    { 3L, new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8074), null, "Driver application was rejected.", false, "Rejected", 0, null, null },
-                    { 4L, new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8075), null, "Driver account has been suspended.", false, "Suspended", 0, null, null }
+                    { 1L, new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(1450), null, "Application submitted and awaiting review.", false, "Pending", 0, null, null },
+                    { 2L, new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(2442), null, "Driver application approved and active.", false, "Approved", 0, null, null },
+                    { 3L, new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(2444), null, "Driver application was rejected.", false, "Rejected", 0, null, null },
+                    { 4L, new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(2445), null, "Driver account has been suspended.", false, "Suspended", 0, null, null }
                 });
 
             migrationBuilder.CreateIndex(

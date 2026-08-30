@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.Features.CustomerRegistration.EndPoint
 {
+    [Route("api/CustomerRegistration/[controller]")]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerRegistrationController : ControllerBase

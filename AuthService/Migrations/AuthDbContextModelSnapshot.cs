@@ -239,7 +239,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2026, 8, 9, 18, 45, 24, 57, DateTimeKind.Utc).AddTicks(3567),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 280, DateTimeKind.Utc).AddTicks(4303),
                             IsDeleted = false,
                             Name = "Customer",
                             PersonType = "Customer"
@@ -247,7 +247,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedAt = new DateTime(2026, 8, 9, 18, 45, 24, 57, DateTimeKind.Utc).AddTicks(4457),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 280, DateTimeKind.Utc).AddTicks(5624),
                             IsDeleted = false,
                             Name = "Driver",
                             PersonType = "Driver"
@@ -255,7 +255,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedAt = new DateTime(2026, 8, 9, 18, 45, 24, 57, DateTimeKind.Utc).AddTicks(4458),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 280, DateTimeKind.Utc).AddTicks(5626),
                             IsDeleted = false,
                             Name = "Admin",
                             PersonType = "Admin"
@@ -304,7 +304,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2026, 8, 9, 18, 45, 24, 58, DateTimeKind.Utc).AddTicks(6876),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(1450),
                             Description = "Application submitted and awaiting review.",
                             IsDeleted = false,
                             Name = "Pending",
@@ -313,7 +313,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedAt = new DateTime(2026, 8, 9, 18, 45, 24, 58, DateTimeKind.Utc).AddTicks(7519),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(2442),
                             Description = "Driver application approved and active.",
                             IsDeleted = false,
                             Name = "Approved",
@@ -322,7 +322,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedAt = new DateTime(2026, 8, 9, 18, 45, 24, 58, DateTimeKind.Utc).AddTicks(7521),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(2444),
                             Description = "Driver application was rejected.",
                             IsDeleted = false,
                             Name = "Rejected",
@@ -331,7 +331,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 4L,
-                            CreatedAt = new DateTime(2026, 8, 9, 18, 45, 24, 58, DateTimeKind.Utc).AddTicks(7521),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(2445),
                             Description = "Driver account has been suspended.",
                             IsDeleted = false,
                             Name = "Suspended",

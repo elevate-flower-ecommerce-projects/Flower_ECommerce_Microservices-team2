@@ -106,6 +106,11 @@ services:
       JwtSettings__Secret: ${JWT_SECRET:-YOUR_SUPER_SECRET_KEY_CHANGE_IN_PRODUCTION_MIN_32_CHARS}
       JwtSettings__Issuer: ${JWT_ISSUER:-FlowersAuth}
       JwtSettings__Audience: ${JWT_AUDIENCE:-FlowersApp}
+      EmailSettings__Host: ${EMAIL_HOST:-smtp.gmail.com}
+      EmailSettings__Port: ${EMAIL_PORT:-587}
+      EmailSettings__SenderEmail: ${EMAIL_SENDER:-testamr124@gmail.com}
+      EmailSettings__SenderName: ${EMAIL_SENDER_NAME:-FlowerBackend}
+      EmailSettings__Password: ${EMAIL_PASSWORD:-exlu nsgy vvsf nhup}
     ports:
       - "5022:8080"
     networks:

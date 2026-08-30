@@ -1,19 +1,23 @@
-﻿using AuthService.Common.BaseHandler;
+using AuthService.Common.BaseHandler;
 using AuthService.Common.Enums;
 using AuthService.Common.Exceptions;
 using AuthService.Common.ResultPattern;
+using AuthService.Common.Services;
 using AuthService.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Features.Password.Commands.ForgotPassword
 {
     /// <summary>
-    /// Finds user by email, generates OTP code, saves OtpVerificationCode to DB, publishes "send email" event via _capPublisher.
+    /// Finds user by email, generates OTP code, saves OtpVerificationCode to DB, sends OTP email, and publishes event.
     /// </summary>
     public class ForgotPasswordCommandHandler : BaseHandler<ForgotPasswordCommand, RequestResult<bool>>
     {
-        public ForgotPasswordCommandHandler(BaseParameters baseParameters) : base(baseParameters)
+        private readonly IEmailService _emailService;
+
+        public ForgotPasswordCommandHandler(BaseParameters baseParameters, IEmailService emailService) : base(baseParameters)
         {
+            _emailService = emailService;
         }
 
         public override async Task<RequestResult<bool>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
@@ -26,8 +30,10 @@ namespace AuthService.Features.Password.Commands.ForgotPassword
             {
                 throw new BusinessException(ErrorCode.BadRequest, "User not found.");
             }
+
             // 2. Generate 6-digit OTP code
             string otpCode = Random.Shared.Next(100000, 999999).ToString();
+
             // 3. Save OTP to database
             var otp = new OtpVerificationCode
             {
@@ -38,14 +44,27 @@ namespace AuthService.Features.Password.Commands.ForgotPassword
                 CreatedAt = DateTime.UtcNow
             };
             await _context.OtpVerificationCodes.AddAsync(otp, cancellationToken);
-            // 4. Publish integration event via CAP (outbox)
-            var emailEvent = new
+            await _context.SaveChangesAsync(cancellationToken);
+
+            // 4. Send email directly via IEmailService
+            await _emailService.SendOtpAsync(user.Email, user.FullName, otpCode, cancellationToken);
+
+            // 5. Publish integration event via CAP (outbox)
+            try
             {
-                Email = user.Email,
-                OtpCode = otpCode,
-                Purpose = "Reset Password"
-            };
-            await _capPublisher.PublishAsync("send.otp.email", emailEvent, cancellationToken: cancellationToken);
+                var emailEvent = new
+                {
+                    Email = user.Email,
+                    OtpCode = otpCode,
+                    Purpose = "Reset Password"
+                };
+                await _capPublisher.PublishAsync("send.otp.email", emailEvent, cancellationToken: cancellationToken);
+            }
+            catch
+            {
+                // Ignore CAP publish errors if running without message broker
+            }
+
             return RequestResult<bool>.Success(true, "OTP verification code sent successfully.");
         }
     }

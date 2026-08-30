@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthService.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20260807231551_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260828154048_Create AuthDatabase")]
+    partial class CreateAuthDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -242,7 +242,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(3754),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 280, DateTimeKind.Utc).AddTicks(4303),
                             IsDeleted = false,
                             Name = "Customer",
                             PersonType = "Customer"
@@ -250,7 +250,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(4581),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 280, DateTimeKind.Utc).AddTicks(5624),
                             IsDeleted = false,
                             Name = "Driver",
                             PersonType = "Driver"
@@ -258,7 +258,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 751, DateTimeKind.Utc).AddTicks(4583),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 280, DateTimeKind.Utc).AddTicks(5626),
                             IsDeleted = false,
                             Name = "Admin",
                             PersonType = "Admin"
@@ -307,7 +307,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(7448),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(1450),
                             Description = "Application submitted and awaiting review.",
                             IsDeleted = false,
                             Name = "Pending",
@@ -316,7 +316,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8072),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(2442),
                             Description = "Driver application approved and active.",
                             IsDeleted = false,
                             Name = "Approved",
@@ -325,7 +325,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8074),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(2444),
                             Description = "Driver application was rejected.",
                             IsDeleted = false,
                             Name = "Rejected",
@@ -334,7 +334,7 @@ namespace AuthService.Migrations
                         new
                         {
                             Id = 4L,
-                            CreatedAt = new DateTime(2026, 8, 7, 23, 15, 50, 752, DateTimeKind.Utc).AddTicks(8075),
+                            CreatedAt = new DateTime(2026, 8, 28, 15, 40, 47, 282, DateTimeKind.Utc).AddTicks(2445),
                             Description = "Driver account has been suspended.",
                             IsDeleted = false,
                             Name = "Suspended",
@@ -383,6 +383,9 @@ namespace AuthService.Migrations
                         .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
+
+                    b.Property<DateTime?>("PasswordChangedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()

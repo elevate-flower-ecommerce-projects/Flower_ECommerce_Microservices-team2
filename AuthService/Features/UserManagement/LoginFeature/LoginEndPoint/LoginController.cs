@@ -24,7 +24,7 @@ namespace AuthService.Features.UserManagement.LoginFeature.LoginEndPoint
         [HttpPost]
         public async Task<EndpointResponse<TokenResponse>> Login([FromBody] LoginRequestVm request, CancellationToken ct)
         {
-            var requestResult = await _mediator.Send(new GenerateTokenOrchestrator(request.Email, request.Password), ct);
+            var requestResult = await _mediator.Send(new GenerateTokenOrchestrator(request.Email, request.Password, request.FcmToken, request.DeviceId), ct);
 
             if (!requestResult.IsSuccess)
                 return EndpointResponse<TokenResponse>.Failure(requestResult.ErrorCode, requestResult.Message);

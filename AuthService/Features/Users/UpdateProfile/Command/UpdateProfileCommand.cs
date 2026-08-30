@@ -8,12 +8,7 @@ namespace AuthService.Features.Users.UpdateProfile;
 public sealed record UpdateProfileCommand(
     string? FullName,
     string? Email,
-    string? Phone,
+    string? PhoneNumber,
     Gender? Gender,
-    UpdateProfileDocument? Document) : ICommand<RequestResult<UserProfileResponse>>;
-
-public sealed record UpdateProfileDocument(
-    string DocumentUrl,
-    string DocumentType,
-    long DocumentSize);
+    string? PhotoUrl) : ICommand<RequestResult<UserProfileResponse>>;
 

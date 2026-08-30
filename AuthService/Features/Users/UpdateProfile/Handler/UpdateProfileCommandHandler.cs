@@ -1,6 +1,7 @@
 using AuthService.Common.BaseHandler;
 using AuthService.Common.Enums;
 using AuthService.Common.ResultPattern;
+using AuthService.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Features.Users.UpdateProfile;
@@ -19,7 +20,11 @@ public sealed class UpdateProfileCommandHandler(BaseParameters baseParameters)
                 "Authenticated user was not found.");
 
         var user = await _context.Users
-            .FirstOrDefaultAsync(candidate => candidate.Id == userId, cancellationToken);
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+            .Include(u => u.DriverProfile)
+            .Include(u => u.Documents)
+            .FirstOrDefaultAsync(candidate => candidate.Id == userId && !candidate.IsDeleted, cancellationToken);
 
         if (user is null)
             return RequestResult<UserProfileResponse>.Failure(
@@ -38,9 +43,9 @@ public sealed class UpdateProfileCommandHandler(BaseParameters baseParameters)
             user.Email = email;
         }
 
-        if (request.Phone is not null)
+        if (request.PhoneNumber is not null)
         {
-            var phone = request.Phone.Trim();
+            var phone = request.PhoneNumber.Trim();
             if (!string.Equals(phone, user.PhoneNumber, StringComparison.Ordinal) &&
                 await _context.Users.AnyAsync(candidate => candidate.Id != userId && candidate.PhoneNumber == phone, cancellationToken))
                 return RequestResult<UserProfileResponse>.Failure(
@@ -52,46 +57,60 @@ public sealed class UpdateProfileCommandHandler(BaseParameters baseParameters)
 
         if (request.FullName is not null)
             user.FullName = request.FullName.Trim();
+
         if (request.Gender is not null)
             user.Gender = request.Gender.Value;
 
-        var existingDocument = await _context.UserDocuments
-            .Where(existing => existing.UserId == userId)
-            .Select(existing => new UserDocumentResponse(
-                existing.Id,
-                existing.DocumentUrl,
-                existing.DocumentType,
-                existing.DocumentSize))
-            .FirstOrDefaultAsync(cancellationToken);
-
-        var document = existingDocument;
-        if (request.Document is not null)
+        if (request.PhotoUrl is not null)
         {
-            var documentResult = await _mediator.Send(
-                new UpdateProfileDocumentCommand(request.Document),
-                cancellationToken);
-
-            if (!documentResult.IsSuccess)
+            var photoUrl = request.PhotoUrl.Trim();
+            var existingPhotoDoc = user.Documents.FirstOrDefault(d => d.DocumentType == "ProfilePhoto");
+            if (existingPhotoDoc is not null)
             {
-                return RequestResult<UserProfileResponse>.Failure(
-                    documentResult.ErrorCode,
-                    documentResult.Message);
+                existingPhotoDoc.DocumentUrl = photoUrl;
+                _context.UserDocuments.Update(existingPhotoDoc);
             }
-
-            document = documentResult.Data;
+            else
+            {
+                var newDoc = new UserDocument
+                {
+                    Id = _snowflake.CreateId(),
+                    UserId = userId,
+                    DocumentType = "ProfilePhoto",
+                    DocumentUrl = photoUrl,
+                    DocumentSize = 0,
+                    CreatedAt = DateTime.UtcNow
+                };
+                await _context.UserDocuments.AddAsync(newDoc, cancellationToken);
+                user.Documents.Add(newDoc);
+            }
         }
 
-        _context.Users.Attach(user);
-        _context.Entry(user).State = EntityState.Modified;
+        _context.Users.Update(user);
 
-        var profile = new UserProfileResponse(
-            user.Id,
-            user.FullName,
-            user.Email,
-            user.PhoneNumber,
-            user.Gender,
-            document);
+        var primaryRole = user.UserRoles.FirstOrDefault()?.Role?.Name;
+        if (string.IsNullOrEmpty(primaryRole))
+        {
+            primaryRole = user.DriverProfile != null ? "Driver" : "Customer";
+        }
 
-        return RequestResult<UserProfileResponse>.Success(profile);
+        var currentPhotoUrl = user.Documents
+            .OrderByDescending(d => d.CreatedAt)
+            .Select(d => d.DocumentUrl)
+            .FirstOrDefault();
+
+        var profile = new UserProfileResponse
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            Gender = user.Gender.ToString(),
+            Role = primaryRole,
+            PhotoUrl = currentPhotoUrl,
+            Status = user.IsBlocked ? "Blocked" : "Active"
+        };
+
+        return RequestResult<UserProfileResponse>.Success(profile, "Profile updated successfully.");
     }
 }
