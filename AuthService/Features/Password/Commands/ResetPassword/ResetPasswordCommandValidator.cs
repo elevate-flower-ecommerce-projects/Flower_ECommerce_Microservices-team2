@@ -23,7 +23,7 @@ namespace AuthService.Features.Password.Commands.ResetPassword
                 .Matches(@"[A-Z]").WithMessage("New password must contain at least one uppercase letter.")
                 .Matches(@"[a-z]").WithMessage("New password must contain at least one lowercase letter.")
                 .Matches(@"[0-9]").WithMessage("New password must contain at least one digit.")
-                .Matches(@"[\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'""\,\<\.\>\/\?\~]|\W")
+                .Matches(@"[!@#$%^&*()_+\-=\[\]{};':""\|,.<>\/?]")
                 .WithMessage("New password must contain at least one special character.");
         }
     }

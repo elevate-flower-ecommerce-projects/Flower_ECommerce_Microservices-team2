@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -139,7 +139,7 @@ namespace AuthService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
-                    GeneratedCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    GeneratedCode = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
