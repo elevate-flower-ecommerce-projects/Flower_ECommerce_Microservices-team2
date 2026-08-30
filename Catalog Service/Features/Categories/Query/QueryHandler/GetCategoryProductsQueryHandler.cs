@@ -2,7 +2,7 @@ using Catalog_Service.Common.BaseHandler;
 using Catalog_Service.Common.ResultPattern;
 using Catalog_Service.Entities;
 using Catalog_Service.Features.Categories.Query;
-using Catalog_Service.Features.Products.Dto;
+using Catalog_Service.Features.Products.GetProducts.Dto;
 
 namespace Catalog_Service.Features.Categories.Query.QueryHandler;
 

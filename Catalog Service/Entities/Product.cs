@@ -31,4 +31,10 @@ public class Product : BaseEntity
     public Category Category { get; set; } = null!;
     public IEnumerable<ProductImage> Images { get; set; } 
     public IEnumerable<ProductOccasion> ProductOccasions { get; set; }  
+
+    /// <summary>Lines of the "what's included" list shown on the product details screen.</summary>
+    public ICollection<ProductInclude> Includes { get; set; } = new List<ProductInclude>();
+
+    /// <summary>Per-store stock rows used to resolve store-scoped availability and price.</summary>
+    public ICollection<ProductStoreInventory> StoreInventories { get; set; } = new List<ProductStoreInventory>();
 }

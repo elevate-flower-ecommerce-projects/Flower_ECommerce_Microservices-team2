@@ -716,6 +716,59 @@
           }
         },
         {
+          "name": "Get Product Details (Store Resolved)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/products/3001?storeId=6001",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "products", "3001"],
+              "query": [
+                {
+                  "key": "storeId",
+                  "value": "6001",
+                  "description": "The customer's resolved store. 6001 (Flowery Zamalek) carries every seeded product."
+                }
+              ]
+            },
+            "description": "Full product details: ordered gallery, description, 'what's included' list, occasions, and pricing plus stock scoped to store 6001. availability.canAddToCart is true and availability.maxOrderQuantity caps the quantity selector."
+          }
+        },
+        {
+          "name": "Get Product Details (No Store — Prompt For Address)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/products/3001",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "products", "3001"]
+            },
+            "description": "No storeId supplied. Returns availability.requiresStoreSelection = true, status StoreNotSelected, availableStock null and canAddToCart false, so the screen prompts for a delivery address instead of showing availability that may be wrong for the customer's area."
+          }
+        },
+        {
+          "name": "Get Product Details (Unresolved Store)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/catalog/products/3001?storeId=6004",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalog", "products", "3001"],
+              "query": [
+                {
+                  "key": "storeId",
+                  "value": "6004",
+                  "description": "Store 6004 (Flowery Dokki) is seeded inactive, so it does not resolve."
+                }
+              ]
+            },
+            "description": "storeId does not resolve to an active store. Returns status StoreUnavailable with canAddToCart false rather than falling back to catalog-wide stock. Use storeId=6002 or 6003 to see NotCarried / OutOfStock on products those stores skip."
+          }
+        },
+        {
           "name": "Seed / Re-seed Catalog Database",
           "request": {
             "method": "POST",

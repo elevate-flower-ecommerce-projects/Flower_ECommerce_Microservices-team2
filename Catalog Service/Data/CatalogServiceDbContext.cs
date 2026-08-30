@@ -22,6 +22,9 @@ public class CatalogServiceDbContext : DbContext
     public DbSet<Occasion> Occasions => Set<Occasion>();
     public DbSet<ProductOccasion> ProductOccasions => Set<ProductOccasion>();
     public DbSet<Section> Sections => Set<Section>();
+    public DbSet<ProductInclude> ProductIncludes => Set<ProductInclude>();
+    public DbSet<Store> Stores => Set<Store>();
+    public DbSet<ProductStoreInventory> ProductStoreInventories => Set<ProductStoreInventory>();
 
     // ─── Override OnConfiguring to apply AsNoTracking globally ──────────────────
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

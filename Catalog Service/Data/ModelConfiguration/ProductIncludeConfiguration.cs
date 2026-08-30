@@ -4,30 +4,29 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Catalog_Service.Data.ModelConfiguration
 {
-    public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
+    public class ProductIncludeConfiguration : IEntityTypeConfiguration<ProductInclude>
     {
-        public void Configure(EntityTypeBuilder<ProductImage> builder)
+        public void Configure(EntityTypeBuilder<ProductInclude> builder)
         {
             builder.HasKey(pi => pi.Id);
 
             builder.Property(pi => pi.Id)
                    .ValueGeneratedNever(); // Snowflake IDs are assigned before insert
 
-            builder.Property(pi => pi.Url)
+            builder.Property(pi => pi.Item)
                    .IsRequired()
-                   .HasMaxLength(2048);
+                   .HasMaxLength(300);
+
+            builder.Property(pi => pi.Quantity)
+                   .HasDefaultValue(1);
 
             builder.Property(pi => pi.DisplayOrder)
                    .HasDefaultValue(0);
 
-            builder.Property(pi => pi.AltText)
-                   .HasMaxLength(300);
-
-            // Drives gallery ordering: ORDER BY DisplayOrder, Id.
             builder.HasIndex(pi => new { pi.ProductId, pi.DisplayOrder });
 
             builder.HasOne(pi => pi.Product)
-                   .WithMany(p => p.Images)
+                   .WithMany(p => p.Includes)
                    .HasForeignKey(pi => pi.ProductId)
                    .OnDelete(DeleteBehavior.NoAction);
         }

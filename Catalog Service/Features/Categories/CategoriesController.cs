@@ -2,7 +2,7 @@ using Catalog_Service.Common.Enums;
 using Catalog_Service.Common.ResultPattern;
 using Catalog_Service.Features.Categories.Dto;
 using Catalog_Service.Features.Categories.Query;
-using Catalog_Service.Features.Products.Dto;
+using Catalog_Service.Features.Products.GetProducts.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

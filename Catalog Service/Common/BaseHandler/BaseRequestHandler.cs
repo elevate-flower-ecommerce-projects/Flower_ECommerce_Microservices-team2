@@ -21,7 +21,7 @@ public abstract class BaseRequestHandler<TRequest, TResponse>(BaseRequestParamet
     /// Generic repository helper — provides <see cref="IQueryable{T}"/> table queries
     /// and pagination methods returning <see cref="ResultPattern.PagedResult{T}"/>.
     /// </summary>
-    protected readonly IGenericRepository _genericRepo             = baseParameters._genericRepository;
+    protected readonly IGenericRepository _genericRepo = baseParameters._genericRepository;
 
     public abstract Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken);
 }

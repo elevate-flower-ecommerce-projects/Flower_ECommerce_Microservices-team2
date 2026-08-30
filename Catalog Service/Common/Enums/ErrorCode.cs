@@ -13,6 +13,9 @@ namespace Catalog_Service.Common.Enums
         [Description("Product not found.")]
         ProductNotFound = 1000,
 
+        [Description("Product is no longer available.")]
+        ProductNoLongerAvailable = 1001,
+
         [Description("Category not found.")]
         CategoryNotFound = 2000,
 
