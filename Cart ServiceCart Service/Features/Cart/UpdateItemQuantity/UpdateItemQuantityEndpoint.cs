@@ -8,7 +8,7 @@ public static class UpdateItemQuantityEndpoint
 {
     public static void MapUpdateItemQuantityEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapPatch("/cart/items/{cartItemId:long}", async (
+        Delegate handler = async (
             long cartItemId,
             [FromBody] UpdateItemQuantityRequest request,
             HttpContext httpContext,
@@ -39,8 +39,9 @@ public static class UpdateItemQuantityEndpoint
                 ErrorCode.Unauthorized => Results.Unauthorized(),
                 _ => Results.BadRequest(response)
             };
-        })
-        .WithTags("Cart")
-        .AllowAnonymous();
+        };
+
+        app.MapPatch("/cart/items/{cartItemId:long}", handler).WithTags("Cart").AllowAnonymous();
+        app.MapPatch("/items/{cartItemId:long}", handler).WithTags("Cart").AllowAnonymous();
     }
 }
