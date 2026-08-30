@@ -42,4 +42,27 @@ public sealed class ProductsController(IMediator mediator) : ControllerBase
             _ => BadRequest(response)
         };
     }
+
+    [HttpGet("{productId:long}")]
+    [ProducesResponseType(typeof(EndpointResponse<ProductDetailDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EndpointResponse<ProductDetailDto>), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<EndpointResponse<ProductDetailDto>>> GetProductById(
+        [FromRoute] long productId,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await mediator.Send(new GetProductByIdQuery(productId), cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Ok(EndpointResponse<ProductDetailDto>.Success(
+                result.Data,
+                result.Message));
+        }
+
+        var response = EndpointResponse<ProductDetailDto>.Failure(
+            result.ErrorCode,
+            result.Message);
+
+        return NotFound(response);
+    }
 }
