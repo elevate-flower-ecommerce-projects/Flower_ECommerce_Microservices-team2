@@ -23,10 +23,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CancellationTokenCaptureMiddleware>();
         services.AddScoped<GlobalErrorHandlerMiddleware>();
         services.AddScoped<ValidationExceptionHandlingMiddleware>();
-        services.AddScoped<BaseRequestParameters>();
+        services.AddScoped<BaseParameters>();
 
         // Generic repository exposing IQueryable table access and pagination.
-        // Injected automatically via BaseRequestParameters into every handler.
+        // Injected automatically via BaseParameters into every handler.
         services.AddScoped<IGenericRepository, GenericRepository>();
 
 
