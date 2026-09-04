@@ -4,6 +4,7 @@ using Catalog_Service.Common.Middelwares;
 using Catalog_Service.Common.Repositories;
 using Catalog_Service.Common.Services;
 using Catalog_Service.Common.Settings;
+using Catalog_Service.Features.Products.Shared;
 
 namespace Catalog_Service.Configurations.DependencyInjection
 {
@@ -30,6 +31,9 @@ namespace Catalog_Service.Configurations.DependencyInjection
             // Generic repository exposing IQueryable table access and pagination.
             // Injected automatically via BaseRequestParameters into every handler.
             services.AddScoped<IGenericRepository, GenericRepository>();
+
+            // Resolves store-scoped stock and pricing for catalog reads (product details, catalog list).
+            services.AddScoped<IStoreAvailabilityResolver, StoreAvailabilityResolver>();
 
             // Email service (MailKit)
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));

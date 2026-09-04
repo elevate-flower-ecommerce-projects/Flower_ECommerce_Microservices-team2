@@ -349,20 +349,32 @@ public static class CatalogDataSeeder
 
             foreach (var kvp in imageMappings)
             {
+                // Gallery order is the order the URLs are listed above: index 0 is the page the
+                // details screen opens on, the rest are swiped to in sequence.
+                var displayOrder = 0;
+
                 foreach (var url in kvp.Value)
                 {
                     var imgId = imageIdCounter++;
-                    if (!existingIds.Contains(imgId))
+                    var order = displayOrder++;
+                    var existingImage = existingImages.FirstOrDefault(i => i.Id == imgId);
+
+                    if (existingImage is not null)
                     {
-                        productImagesToSeed.Add(new ProductImage
-                        {
-                            Id = imgId,
-                            ProductId = kvp.Key,
-                            Url = url,
-                            IsDeleted = false,
-                            CreatedAt = now
-                        });
+                        // Rows seeded before the gallery had an explicit order all carry 0 — back-fill them.
+                        existingImage.DisplayOrder = order;
+                        continue;
                     }
+
+                    productImagesToSeed.Add(new ProductImage
+                    {
+                        Id = imgId,
+                        ProductId = kvp.Key,
+                        Url = url,
+                        DisplayOrder = order,
+                        IsDeleted = false,
+                        CreatedAt = now
+                    });
                 }
             }
 
@@ -715,6 +727,196 @@ public static class CatalogDataSeeder
         {
             Console.WriteLine($"[CatalogDataSeeder] ERROR seeding sections: {ex.Message}");
             logger.LogError(ex, "Error seeding sections.");
+        }
+
+        // ─── 8. Seed Stores (4 fulfilment stores, one temporarily closed) ─────────
+        // Local read-model of the Address & Store Coverage service. Store 6004 is left inactive
+        // on purpose so the "store does not resolve" path on product details is reachable.
+        try
+        {
+            var storesToSeed = new List<Store>
+            {
+                new Store { Id = 6001, Name = "Flowery Zamalek",    CoverageArea = "Cairo - Zamalek",       IsActive = true,  IsDeleted = false, CreatedAt = now },
+                new Store { Id = 6002, Name = "Flowery Nasr City",  CoverageArea = "Cairo - Nasr City",     IsActive = true,  IsDeleted = false, CreatedAt = now },
+                new Store { Id = 6003, Name = "Flowery Alexandria", CoverageArea = "Alexandria - Downtown", IsActive = true,  IsDeleted = false, CreatedAt = now },
+                new Store { Id = 6004, Name = "Flowery Dokki",      CoverageArea = "Giza - Dokki",          IsActive = false, IsDeleted = false, CreatedAt = now }
+            };
+
+            var existingStoreIds = (await context.Stores.IgnoreQueryFilters().Select(s => s.Id).ToListAsync()).ToHashSet();
+
+            var newStores = storesToSeed.Where(s => !existingStoreIds.Contains(s.Id)).ToList();
+            if (newStores.Any())
+            {
+                context.Stores.AddRange(newStores);
+            }
+            await context.SaveChangesAsync();
+            summary["Stores"] = await context.Stores.CountAsync();
+            Console.WriteLine($"[CatalogDataSeeder] Stores in DB: {summary["Stores"]}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[CatalogDataSeeder] ERROR seeding stores: {ex.Message}");
+            logger.LogError(ex, "Error seeding stores.");
+        }
+
+        // ─── 9. Seed Product "What's Included" Lists ──────────────────────────────
+        try
+        {
+            // Per-category extras. Every product also gets a line for the product itself and a
+            // closing greeting-card line, which together form the list the details screen renders.
+            var includesByCategory = new Dictionary<long, string[]>
+            {
+                { 1001, new[] { "Hand-tied wrap with matching ribbon", "Fresh seasonal filler greenery" } },
+                { 1002, new[] { "Designer glass vase", "Floral foam base and decorative accents" } },
+                { 1003, new[] { "Ceramic pot with drainage tray", "Slow-release plant food sachet" } },
+                { 1004, new[] { "Velvet-lined presentation box", "Rose food sachet" } },
+                { 1005, new[] { "Orchid display pot", "Bamboo support stake and clips" } },
+                { 1006, new[] { "Preserved stems ready to display", "Linen wrap and twine tie" } },
+                { 1007, new[] { "Woven gift basket", "Ribbon-tied gift tag" } },
+                { 1008, new[] { "Protective packaging sleeve", "Cleaning and care cloth" } },
+                { 1009, new[] { "Bridal stem holder and pins", "Matching buttonhole flower" } },
+                { 1010, new[] { "Kraft paper sleeve", "Stem hydration wrap" } },
+                { 1011, new[] { "Glazed bonsai tray", "Pruning shears and pebble set" } },
+                { 1012, new[] { "Gift box with tissue lining", "Ribbon-tied gift tag" } }
+            };
+
+            var seededProducts = await context.Products
+                .IgnoreQueryFilters()
+                .Select(p => new { p.Id, p.Name, p.CategoryId })
+                .ToListAsync();
+
+            var existingIncludeIds = (await context.ProductIncludes.IgnoreQueryFilters().Select(i => i.Id).ToListAsync()).ToHashSet();
+            var includesToSeed = new List<ProductInclude>();
+
+            foreach (var seededProduct in seededProducts)
+            {
+                var lines = new List<string> { seededProduct.Name };
+
+                if (includesByCategory.TryGetValue(seededProduct.CategoryId, out var extras))
+                {
+                    lines.AddRange(extras);
+                }
+
+                lines.Add("Complimentary greeting card with your message");
+
+                for (var line = 0; line < lines.Count; line++)
+                {
+                    // Ids are derived from the product so re-seeding stays stable as the product
+                    // list grows — a running counter would renumber every row after an insertion.
+                    var includeId = (seededProduct.Id * 10) + line;
+
+                    if (existingIncludeIds.Contains(includeId))
+                    {
+                        continue;
+                    }
+
+                    includesToSeed.Add(new ProductInclude
+                    {
+                        Id = includeId,
+                        ProductId = seededProduct.Id,
+                        Item = lines[line],
+                        Quantity = 1,
+                        DisplayOrder = line,
+                        IsDeleted = false,
+                        CreatedAt = now
+                    });
+                }
+            }
+
+            if (includesToSeed.Any())
+            {
+                context.ProductIncludes.AddRange(includesToSeed);
+            }
+            await context.SaveChangesAsync();
+            summary["ProductIncludes"] = await context.ProductIncludes.CountAsync();
+            Console.WriteLine($"[CatalogDataSeeder] ProductIncludes in DB: {summary["ProductIncludes"]}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[CatalogDataSeeder] ERROR seeding product includes: {ex.Message}");
+            logger.LogError(ex, "Error seeding product includes.");
+        }
+
+        // ─── 10. Seed Store-Scoped Inventory ──────────────────────────────────────
+        // Deliberately uneven so every availability state on the details screen is reachable:
+        // the flagship store carries everything, the others skip products and hold zero stock
+        // on a slice of what they do carry.
+        try
+        {
+            var stockedProducts = await context.Products
+                .IgnoreQueryFilters()
+                .Select(p => new { p.Id, p.Quantity })
+                .ToListAsync();
+
+            var storeIds = await context.Stores
+                .IgnoreQueryFilters()
+                .Select(s => s.Id)
+                .OrderBy(id => id)
+                .ToListAsync();
+
+            var existingInventoryIds = (await context.ProductStoreInventories.IgnoreQueryFilters().Select(i => i.Id).ToListAsync()).ToHashSet();
+            var inventoryToSeed = new List<ProductStoreInventory>();
+
+            foreach (var storeId in storeIds)
+            {
+                var storeOffset = (int)(storeId - 6000);
+
+                foreach (var stockedProduct in stockedProducts)
+                {
+                    // Which store carries which product — the flagship (6001) carries them all.
+                    var isCarried = storeOffset switch
+                    {
+                        1 => true,
+                        2 => stockedProduct.Id % 3 != 0,
+                        3 => stockedProduct.Id % 4 != 0,
+                        _ => stockedProduct.Id % 5 == 0
+                    };
+
+                    if (!isCarried)
+                    {
+                        continue;
+                    }
+
+                    var inventoryId = (stockedProduct.Id * 100) + storeOffset;
+                    if (existingInventoryIds.Contains(inventoryId))
+                    {
+                        continue;
+                    }
+
+                    // Satellite stores hold a fraction of the catalog quantity, and every 7th
+                    // product they carry is sold out so "Out of stock" is reachable too.
+                    var isSoldOut = storeOffset > 1 && stockedProduct.Id % 7 == 0;
+                    var stock = storeOffset == 1
+                        ? stockedProduct.Quantity
+                        : Math.Max(0, stockedProduct.Quantity / (storeOffset + 1));
+
+                    inventoryToSeed.Add(new ProductStoreInventory
+                    {
+                        Id = inventoryId,
+                        ProductId = stockedProduct.Id,
+                        StoreId = storeId,
+                        StockQuantity = isSoldOut ? 0 : stock,
+                        MaxOrderQuantity = 10,
+                        PriceOverride = null,
+                        IsActive = true,
+                        IsDeleted = false,
+                        CreatedAt = now
+                    });
+                }
+            }
+
+            if (inventoryToSeed.Any())
+            {
+                context.ProductStoreInventories.AddRange(inventoryToSeed);
+            }
+            await context.SaveChangesAsync();
+            summary["ProductStoreInventories"] = await context.ProductStoreInventories.CountAsync();
+            Console.WriteLine($"[CatalogDataSeeder] ProductStoreInventories in DB: {summary["ProductStoreInventories"]}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[CatalogDataSeeder] ERROR seeding store inventory: {ex.Message}");
+            logger.LogError(ex, "Error seeding store inventory.");
         }
 
         Console.WriteLine("[CatalogDataSeeder] CatalogServiceDb seeding process completed successfully.");

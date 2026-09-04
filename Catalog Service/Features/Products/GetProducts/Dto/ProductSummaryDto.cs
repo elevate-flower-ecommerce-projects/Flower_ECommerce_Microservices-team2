@@ -1,6 +1,6 @@
 using Catalog_Service.Common.Enums;
 
-namespace Catalog_Service.Features.Products.Dto;
+namespace Catalog_Service.Features.Products.GetProducts.Dto;
 
 public sealed record ProductSummaryDto(
     long Id,

@@ -1,12 +1,7 @@
-using Catalog_Service.Common.Enums;
-using Catalog_Service.Common.ResultPattern;
-using Catalog_Service.Features.Products.Dto;
-using Catalog_Service.Features.Products.Query;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog_Service.Features.Products;
-
 [ApiController]
 [Route("products")]
 public sealed class ProductsController(IMediator mediator) : ControllerBase

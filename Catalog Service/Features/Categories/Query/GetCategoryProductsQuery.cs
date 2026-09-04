@@ -1,5 +1,5 @@
 using Catalog_Service.Common.ResultPattern;
-using Catalog_Service.Features.Products.Dto;
+using Catalog_Service.Features.Products.GetProducts.Dto;
 using MediatR;
 
 namespace Catalog_Service.Features.Categories.Query;
