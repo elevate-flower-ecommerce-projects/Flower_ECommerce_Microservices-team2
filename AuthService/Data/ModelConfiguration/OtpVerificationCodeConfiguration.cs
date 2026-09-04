@@ -20,7 +20,7 @@ namespace AuthService.Data.ModelConfiguration
 
             builder.Property(o => o.GeneratedCode)
                    .IsRequired()
-                   .HasMaxLength(10);
+                   .HasMaxLength(128);
         }
     }
 }

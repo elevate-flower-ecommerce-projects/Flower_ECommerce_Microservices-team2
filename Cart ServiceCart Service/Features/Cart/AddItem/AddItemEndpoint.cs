@@ -8,7 +8,7 @@ public static class AddItemEndpoint
 {
     public static void MapAddItemEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/cart/items", async (
+        Delegate handler = async (
             [FromBody] AddItemRequest request,
             HttpContext httpContext,
             IMediator mediator,
@@ -38,8 +38,9 @@ public static class AddItemEndpoint
                 ErrorCode.Unauthorized => Results.Unauthorized(),
                 _ => Results.BadRequest(response)
             };
-        })
-        .WithTags("Cart")
-        .AllowAnonymous();
+        };
+
+        app.MapPost("/cart/items", handler).WithTags("Cart").AllowAnonymous();
+        app.MapPost("/items", handler).WithTags("Cart").AllowAnonymous();
     }
 }

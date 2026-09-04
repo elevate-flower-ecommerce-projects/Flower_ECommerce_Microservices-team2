@@ -48,6 +48,22 @@ public static class AuthDataSeeder
                 }
 
                 await context.Database.MigrateAsync();
+
+                // Ensure GeneratedCode column is long enough to store 64-char reset tokens
+                try
+                {
+                    await context.Database.ExecuteSqlRawAsync(@"
+                        IF OBJECT_ID(N'[OtpVerificationCodes]', N'U') IS NOT NULL
+                        BEGIN
+                            ALTER TABLE [OtpVerificationCodes] ALTER COLUMN [GeneratedCode] nvarchar(128) NOT NULL;
+                        END;
+                    ");
+                }
+                catch
+                {
+                    // Ignore if already adjusted
+                }
+
                 logger.LogInformation("AuthDb database migration completed successfully.");
                 break;
             }

@@ -1,11 +1,13 @@
 using Cart_ServiceCart_Service.Common.BaseHandler;
 using Cart_ServiceCart_Service.Common.Middelwares;
 using Cart_ServiceCart_Service.Configurations.DependencyInjection;
+using Cart_ServiceCart_Service.Data;
 using Cart_ServiceCart_Service.Features.Cart;
 using Cart_ServiceCart_Service.Features.Cart.AddItem;
 using Cart_ServiceCart_Service.Features.Cart.GetProductAvailability;
 using Cart_ServiceCart_Service.Features.Cart.UpdateItemQuantity;
 using IdGen;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -104,7 +106,43 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapAddItemEndpoint();
 app.MapUpdateItemQuantityEndpoint();
 app.MapControllers();
-
 app.MapGet("/health", () => Results.Ok(new { status = "Healthy", service = "Cart Service", timestamp = DateTime.UtcNow }));
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<CartDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var maxRetries = 10;
+    for (int i = 0; i < maxRetries; i++)
+    {
+        try
+        {
+            logger.LogInformation("Attempting to apply CartDb database migrations (Attempt {Attempt}/{MaxRetries})...", i + 1, maxRetries);
+            if (dbContext.Database.IsRelational())
+            {
+                await dbContext.Database.MigrateAsync();
+            }
+            else
+            {
+                await dbContext.Database.EnsureCreatedAsync();
+            }
+            logger.LogInformation("CartDb database migrated successfully.");
+            break;
+        }
+        catch (Exception ex)
+        {
+            if (i == maxRetries - 1)
+            {
+                logger.LogWarning(ex, "Failed to migrate CartDb after {MaxRetries} attempts, attempting EnsureCreatedAsync.", maxRetries);
+                try { await dbContext.Database.EnsureCreatedAsync(); } catch { /* ignore */ }
+            }
+            else
+            {
+                logger.LogWarning("CartDb migration failed: {Message}. Retrying in 2 seconds...", ex.Message);
+                await Task.Delay(2000);
+            }
+        }
+    }
+}
 
 app.Run();

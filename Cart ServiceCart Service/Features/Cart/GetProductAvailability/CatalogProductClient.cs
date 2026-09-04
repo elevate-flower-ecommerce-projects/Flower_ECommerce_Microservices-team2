@@ -1,5 +1,5 @@
 using System.Net;
-using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Cart_ServiceCart_Service.Features.Cart.GetProductAvailability;
 
@@ -36,12 +36,41 @@ public sealed class CatalogProductClient(HttpClient httpClient) : IProductCatalo
             if (response.StatusCode == HttpStatusCode.NotFound)
                 return new CatalogProductLookupResult(CatalogProductLookupStatus.NotFound);
 
-            response.EnsureSuccessStatusCode();
-
-            var product = await response.Content.ReadFromJsonAsync<CatalogProduct>(cancellationToken: cancellationToken);
-            if (product is null)
+            if (!response.IsSuccessStatusCode)
                 return new CatalogProductLookupResult(CatalogProductLookupStatus.Error);
 
+            var json = await response.Content.ReadAsStringAsync(cancellationToken);
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            var productElement = root;
+            if (root.TryGetProperty("data", out var dataElement) && dataElement.ValueKind == JsonValueKind.Object)
+            {
+                productElement = dataElement;
+            }
+
+            var id = productElement.TryGetProperty("id", out var idProp) ? idProp.GetInt64() : productId;
+            var name = productElement.TryGetProperty("name", out var nameProp) ? nameProp.GetString() ?? string.Empty : string.Empty;
+            
+            decimal unitPrice = 0m;
+            if (productElement.TryGetProperty("unitPrice", out var upProp))
+                unitPrice = upProp.GetDecimal();
+            else if (productElement.TryGetProperty("price", out var pProp))
+                unitPrice = pProp.GetDecimal();
+
+            int availableQty = 0;
+            if (productElement.TryGetProperty("availableQuantity", out var aqProp))
+                availableQty = aqProp.GetInt32();
+            else if (productElement.TryGetProperty("quantity", out var qProp))
+                availableQty = qProp.GetInt32();
+            else if (productElement.TryGetProperty("stockQuantity", out var sqProp))
+                availableQty = sqProp.GetInt32();
+
+            bool isActive = true;
+            if (productElement.TryGetProperty("isActive", out var iaProp))
+                isActive = iaProp.GetBoolean();
+
+            var product = new CatalogProduct(id, name, unitPrice, availableQty, isActive);
             return new CatalogProductLookupResult(CatalogProductLookupStatus.Found, product);
         }
         catch
