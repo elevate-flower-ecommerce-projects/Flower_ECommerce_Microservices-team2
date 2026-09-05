@@ -13,6 +13,7 @@ public class CartDbContext : DbContext
 
     public DbSet<Cart> Carts => Set<Cart>();
     public DbSet<CartItem> CartItems => Set<CartItem>();
+    public DbSet<Address> Addresses => Set<Address>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

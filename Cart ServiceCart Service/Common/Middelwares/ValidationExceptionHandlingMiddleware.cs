@@ -14,6 +14,7 @@ public class ValidationExceptionHandlingMiddleware : IMiddleware
         catch (RequestValidationException exception)
         {
             string message = exception.Message;
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
             var result = EndpointResponse<bool>.Failure(ErrorCode.InvalidInput, message);
 
             await context.Response.WriteAsJsonAsync(result);

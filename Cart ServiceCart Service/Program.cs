@@ -6,6 +6,13 @@ using Cart_ServiceCart_Service.Features.Cart;
 using Cart_ServiceCart_Service.Features.Cart.AddItem;
 using Cart_ServiceCart_Service.Features.Cart.GetProductAvailability;
 using Cart_ServiceCart_Service.Features.Cart.UpdateItemQuantity;
+using Cart_ServiceCart_Service.Features.Address.GetAddresses;
+using Cart_ServiceCart_Service.Features.Address.GetAddressById;
+using Cart_ServiceCart_Service.Features.Address.CreateAddress;
+using Cart_ServiceCart_Service.Features.Address.UpdateAddress;
+using Cart_ServiceCart_Service.Features.Address.DeleteAddress;
+using Cart_ServiceCart_Service.Features.Address.SetDefaultAddress;
+using Cart_ServiceCart_Service.Features.Address.Services;
 using IdGen;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -34,6 +41,20 @@ builder.Services.AddHttpClient<IProductCatalogClient, CatalogProductClient>(clie
     client.BaseAddress = new Uri(catalogBaseAddress, ".");
     client.Timeout = TimeSpan.FromSeconds(5);
 });
+
+var addressBaseUrl = builder.Configuration["AddressService:BaseUrl"] ?? "http://addressservice:8080/";
+if (Uri.TryCreate(addressBaseUrl, UriKind.Absolute, out var addressBaseAddress))
+{
+    builder.Services.AddHttpClient<IGeoLookupService, GeoLookupService>(client =>
+    {
+        client.BaseAddress = new Uri(addressBaseAddress, ".");
+        client.Timeout = TimeSpan.FromSeconds(5);
+    });
+}
+else
+{
+    builder.Services.AddScoped<IGeoLookupService, GeoLookupService>();
+}
 
 var machineId = builder.Configuration.GetValue<int?>("IdGen:MachineId") ?? 1;
 if (machineId is < 0 or > 1023)
@@ -105,6 +126,12 @@ app.UseMiddleware<UserStateMiddleware>();
 app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapAddItemEndpoint();
 app.MapUpdateItemQuantityEndpoint();
+app.MapGetAddressesEndpoint();
+app.MapGetAddressByIdEndpoint();
+app.MapCreateAddressEndpoint();
+app.MapUpdateAddressEndpoint();
+app.MapDeleteAddressEndpoint();
+app.MapSetDefaultAddressEndpoint();
 app.MapControllers();
 app.MapGet("/health", () => Results.Ok(new { status = "Healthy", service = "Cart Service", timestamp = DateTime.UtcNow }));
 
